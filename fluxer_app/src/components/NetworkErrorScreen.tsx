@@ -47,6 +47,10 @@ export const NetworkErrorScreen: React.FC = () => {
 						<a href="https://bsky.app/profile/atomicradius.app" target="_blank" rel="noopener noreferrer">
 							Bluesky (@atomicradius.app)
 						</a>{' '}
+						or{' '}
+						<a href="https://x.com/atomicradiusapp" target="_blank" rel="noopener noreferrer">
+							X (@atomicradiusapp)
+						</a>{' '}
 						for status updates.
 					</Trans>
 				</p>
