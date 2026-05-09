@@ -58,6 +58,15 @@ interface RegisterData {
 	invite_code?: string;
 }
 
+interface SocialRegisterData extends Omit<RegisterData, 'email' | 'password' | 'captchaToken' | 'captchaType'> {
+	social_ticket: string;
+}
+
+export interface SocialAuthProvider {
+	id: 'google' | 'apple';
+	label: string;
+}
+
 interface StandardLoginResponse {
 	mfa: false;
 	user_id: string;
@@ -334,6 +343,50 @@ export const register = async (data: RegisterData): Promise<TokenResponse> => {
 		logger.error('Registration failed', error);
 		throw error;
 	}
+};
+
+export const getSocialAuthProviders = async (): Promise<Array<SocialAuthProvider>> => {
+	const response = await http.get<{providers: Array<SocialAuthProvider>}>({
+		url: Endpoints.AUTH_SOCIAL_PROVIDERS,
+		skipAuth: true,
+	});
+	return response.body.providers ?? [];
+};
+
+export const startSocialAuth = (provider: string, redirectTo: string): void => {
+	const base = RuntimeConfigStore.apiEndpoint.replace(/\/$/, '');
+	window.location.href = `${base}/v1${Endpoints.AUTH_SOCIAL_START(provider, redirectTo)}`;
+};
+
+export const redeemSocialAuthTicket = async (ticket: string): Promise<TokenResponse> => {
+	const response = await http.post<TokenResponse>({
+		url: Endpoints.AUTH_SOCIAL_TOKEN,
+		body: {ticket},
+		skipAuth: true,
+		headers: withPlatformHeader(),
+	});
+	return response.body;
+};
+
+export const getSocialRegistrationTicket = async (
+	ticket: string,
+): Promise<{email: string; global_name?: string; provider: string}> => {
+	const response = await http.get<{email: string; global_name?: string; provider: string}>({
+		url: Endpoints.AUTH_SOCIAL_REGISTER_TICKET(ticket),
+		skipAuth: true,
+	});
+	return response.body;
+};
+
+export const registerSocial = async (data: SocialRegisterData): Promise<TokenResponse> => {
+	const response = await http.post<TokenResponse>({
+		url: Endpoints.AUTH_SOCIAL_REGISTER,
+		body: data,
+		skipAuth: true,
+		headers: withPlatformHeader(),
+	});
+	logger.info('Social registration successful');
+	return response.body;
 };
 
 interface UsernameSuggestionsResponse {

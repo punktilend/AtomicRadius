@@ -34,11 +34,21 @@ export const RegisterRequest = z.object({
 	invite_code: createStringType(0, 256).nullish(),
 });
 
+export const SocialRegisterRequest = RegisterRequest.extend({
+	social_ticket: createStringType(16, 256),
+});
+
+export const SocialTokenRequest = z.object({
+	ticket: createStringType(16, 256),
+});
+
 export const UsernameSuggestionsRequest = z.object({
 	global_name: GlobalNameType,
 });
 
 export type RegisterRequest = z.infer<typeof RegisterRequest>;
+export type SocialRegisterRequest = z.infer<typeof SocialRegisterRequest>;
+export type SocialTokenRequest = z.infer<typeof SocialTokenRequest>;
 
 export type UsernameSuggestionsRequest = z.infer<typeof UsernameSuggestionsRequest>;
 

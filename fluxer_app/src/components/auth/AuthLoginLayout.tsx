@@ -25,6 +25,7 @@ import * as AuthenticationActionCreators from '~/actions/AuthenticationActionCre
 import {AccountSelector} from '~/components/accounts/AccountSelector';
 import AuthLoginEmailPasswordForm from '~/components/auth/AuthLoginCore/AuthLoginEmailPasswordForm';
 import AuthLoginPasskeyActions, {AuthLoginDivider} from '~/components/auth/AuthLoginCore/AuthLoginPasskeyActions';
+import {AuthSocialLoginActions} from '~/components/auth/AuthSocialLoginActions';
 import {useDesktopHandoffFlow} from '~/components/auth/AuthLoginCore/useDesktopHandoffFlow';
 import {AuthRouterLink} from '~/components/auth/AuthRouterLink';
 import DesktopHandoffAccountSelector from '~/components/auth/DesktopHandoffAccountSelector';
@@ -236,6 +237,12 @@ const AuthLoginLayout = observer(function AuthLoginLayout({
 			{showTitle ? <h1 className={styles.title}>{title ?? <Trans>Welcome back</Trans>}</h1> : null}
 
 			{!showAccountSelector && switchError ? <div className={styles.loginNotice}>{switchError}</div> : null}
+
+			<AuthSocialLoginActions
+				className={styles.passkeyActions}
+				disabled={passkeyControlsDisabled}
+				redirectPath={redirectPath || '/channels/@me'}
+			/>
 
 			<AuthLoginEmailPasswordForm
 				form={form}

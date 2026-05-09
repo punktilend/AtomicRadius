@@ -250,6 +250,17 @@ const ConfigSchema = z.object({
 			rpId: z.string(),
 			allowedOrigins: z.array(z.string()),
 		}),
+		social: z.object({
+			enabled: z.boolean(),
+			google: z.object({
+				clientId: z.string().optional(),
+				clientSecret: z.string().optional(),
+			}),
+			apple: z.object({
+				clientId: z.string().optional(),
+				clientSecret: z.string().optional(),
+			}),
+		}),
 	}),
 
 	cookie: z.object({
@@ -486,6 +497,17 @@ function loadConfig() {
 				rpName: optional('PASSKEY_RP_NAME') || 'Fluxer',
 				rpId: optional('PASSKEY_RP_ID') || extractHostname(webAppEndpoint),
 				allowedOrigins: passkeyAllowedOrigins,
+			},
+			social: {
+				enabled: optionalBool('SOCIAL_AUTH_ENABLED'),
+				google: {
+					clientId: optional('GOOGLE_OAUTH_CLIENT_ID'),
+					clientSecret: optional('GOOGLE_OAUTH_CLIENT_SECRET'),
+				},
+				apple: {
+					clientId: optional('APPLE_OAUTH_CLIENT_ID'),
+					clientSecret: optional('APPLE_OAUTH_CLIENT_SECRET'),
+				},
 			},
 		},
 

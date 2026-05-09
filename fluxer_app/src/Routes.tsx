@@ -27,6 +27,7 @@ export const Routes = {
 	RESET_PASSWORD: '/reset',
 	VERIFY_EMAIL: '/verify',
 	AUTHORIZE_IP: '/authorize-ip',
+	SOCIAL_AUTH_CALLBACK: '/auth/social/callback',
 	EMAIL_REVERT: '/wasntme',
 	PENDING_VERIFICATION: '/pending',
 	OAUTH_AUTHORIZE: '/oauth2/authorize',

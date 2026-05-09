@@ -19,9 +19,12 @@
 
 import {Trans, useLingui} from '@lingui/react/macro';
 import {observer} from 'mobx-react-lite';
+import {useEffect, useState} from 'react';
+import * as AuthenticationActionCreators from '~/actions/AuthenticationActionCreators';
 import {AuthBottomLink} from '~/components/auth/AuthBottomLink';
 import sharedStyles from '~/components/auth/AuthPageStyles.module.css';
 import {AuthRegisterFormCore} from '~/components/auth/AuthRegisterFormCore';
+import {AuthSocialLoginActions} from '~/components/auth/AuthSocialLoginActions';
 import {useFluxerDocumentTitle} from '~/hooks/useFluxerDocumentTitle';
 import {useLocation} from '~/lib/router';
 
@@ -30,6 +33,19 @@ const RegisterPageContent = observer(function RegisterPageContent() {
 	const params = new URLSearchParams(location.search);
 	const rawRedirect = params.get('redirect_to');
 	const redirectTo = rawRedirect || '/';
+	const socialTicket = params.get('social_ticket');
+	const [socialInfo, setSocialInfo] = useState<{email: string; global_name?: string; provider: string} | null>(null);
+
+	useEffect(() => {
+		if (!socialTicket) {
+			setSocialInfo(null);
+			return;
+		}
+
+		void AuthenticationActionCreators.getSocialRegistrationTicket(socialTicket)
+			.then(setSocialInfo)
+			.catch(() => setSocialInfo(null));
+	}, [socialTicket]);
 
 	return (
 		<>
@@ -38,16 +54,29 @@ const RegisterPageContent = observer(function RegisterPageContent() {
 			</h1>
 
 			<div className={sharedStyles.container}>
+				{!socialTicket ? (
+					<AuthSocialLoginActions className={sharedStyles.socialActions} redirectPath={redirectTo} />
+				) : null}
+
 				<AuthRegisterFormCore
 					fields={{
-						showEmail: true,
-						showPassword: true,
+						showEmail: !socialTicket,
+						showPassword: !socialTicket,
 						showUsernameValidation: true,
 						showBetaCodeHint: true,
 						requireBetaCode: false,
 					}}
 					submitLabel={<Trans>Create account</Trans>}
 					redirectPath={redirectTo}
+					socialTicket={socialTicket}
+					initialGlobalName={socialInfo?.global_name}
+					extraContent={
+						socialInfo ? (
+							<div className={sharedStyles.notice}>
+								<Trans>Using {socialInfo.email}</Trans>
+							</div>
+						) : null
+					}
 				/>
 
 				<AuthBottomLink

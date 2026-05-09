@@ -50,6 +50,8 @@ interface AuthRegisterFormCoreProps {
 	onRegister?: (response: {token: string; user_id: string}) => Promise<void>;
 	inviteCode?: string;
 	extraContent?: React.ReactNode;
+	socialTicket?: string | null;
+	initialGlobalName?: string;
 }
 
 export function AuthRegisterFormCore({
@@ -59,6 +61,8 @@ export function AuthRegisterFormCore({
 	onRegister,
 	inviteCode,
 	extraContent,
+	socialTicket,
+	initialGlobalName,
 }: AuthRegisterFormCoreProps) {
 	const {t} = useLingui();
 	const {
@@ -81,7 +85,7 @@ export function AuthRegisterFormCore({
 	const [usernameFocused, setUsernameFocused] = useState(false);
 
 	const initialValues: Record<string, string> = {
-		global_name: '',
+		global_name: initialGlobalName ?? '',
 		username: '',
 		betaCode: '',
 	};
@@ -94,16 +98,26 @@ export function AuthRegisterFormCore({
 				? `${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`
 				: '';
 
-		const response = await AuthenticationActionCreators.register({
-			global_name: values.global_name || undefined,
-			username: values.username || undefined,
-			email: showEmail ? values.email : undefined,
-			password: showPassword ? values.password : undefined,
-			beta_code: values.betaCode || '',
-			date_of_birth: dateOfBirth,
-			consent,
-			invite_code: inviteCode,
-		});
+		const response = socialTicket
+			? await AuthenticationActionCreators.registerSocial({
+					social_ticket: socialTicket,
+					global_name: values.global_name || undefined,
+					username: values.username || undefined,
+					beta_code: values.betaCode || '',
+					date_of_birth: dateOfBirth,
+					consent,
+					invite_code: inviteCode,
+				})
+			: await AuthenticationActionCreators.register({
+					global_name: values.global_name || undefined,
+					username: values.username || undefined,
+					email: showEmail ? values.email : undefined,
+					password: showPassword ? values.password : undefined,
+					beta_code: values.betaCode || '',
+					date_of_birth: dateOfBirth,
+					consent,
+					invite_code: inviteCode,
+				});
 
 		if (onRegister) {
 			await onRegister(response);

@@ -35,6 +35,7 @@ import {AuthPasswordService} from '~/auth/services/AuthPasswordService';
 import {AuthPhoneService} from '~/auth/services/AuthPhoneService';
 import {AuthRegistrationService} from '~/auth/services/AuthRegistrationService';
 import {AuthSessionService} from '~/auth/services/AuthSessionService';
+import {AuthSocialService} from '~/auth/services/AuthSocialService';
 import {AuthUtilityService} from '~/auth/services/AuthUtilityService';
 import {createMfaTicket, type UserID} from '~/BrandedTypes';
 import {APIErrorCodes, UserAuthenticatorTypes} from '~/Constants';
@@ -148,6 +149,7 @@ export class AuthService implements IAuthService {
 	private phoneService: AuthPhoneService;
 	private mfaService: AuthMfaService;
 	private utilityService: AuthUtilityService;
+	private socialService: AuthSocialService;
 
 	constructor(
 		private repository: IUserRepository,
@@ -231,6 +233,12 @@ export class AuthService implements IAuthService {
 			this.mfaService.verifyWebAuthnAuthentication.bind(this.mfaService),
 		);
 
+		this.socialService = new AuthSocialService(
+			repository,
+			cacheService,
+			this.sessionService.createAuthSession.bind(this.sessionService),
+		);
+
 		this.emailService = new AuthEmailService(
 			repository,
 			emailServiceDep,
@@ -280,6 +288,48 @@ export class AuthService implements IAuthService {
 		| {mfa: true; ticket: string; sms: boolean; totp: boolean; webauthn: boolean}
 	> {
 		return this.loginService.login({data, request});
+	}
+
+	getSocialProviders(): Array<{id: 'google' | 'apple'; label: string}> {
+		return this.socialService.getEnabledProviders();
+	}
+
+	async getSocialAuthorizationUrl(provider: string, redirectTo: string): Promise<string> {
+		return this.socialService.buildAuthorizationUrl(provider, redirectTo);
+	}
+
+	async completeSocialCallback(params: {
+		providerId: string;
+		code: string;
+		state: string;
+		request: Request;
+	}): Promise<string> {
+		return this.socialService.completeCallback(params);
+	}
+
+	async redeemSocialTokenTicket(ticket: string): Promise<{token: string; user_id: string}> {
+		return this.socialService.redeemTokenTicket(ticket);
+	}
+
+	async getSocialRegistrationTicket(ticket: string): Promise<{email: string; global_name?: string; provider: string}> {
+		return this.socialService.getRegistrationTicket(ticket);
+	}
+
+	async registerSocial({
+		data,
+		request,
+		requestCache,
+	}: {
+		data: RegisterRequest & {social_ticket: string};
+		request: Request;
+		requestCache: RequestCache;
+	}): Promise<{user_id: string; token: string; pending_verification?: boolean}> {
+		return this.socialService.registerSocial({
+			data,
+			request,
+			requestCache,
+			register: this.registrationService.register.bind(this.registrationService),
+		});
 	}
 
 	async loginMfaTotp({code, ticket, request}: LoginMfaTotpParams): Promise<{user_id: string; token: string}> {
