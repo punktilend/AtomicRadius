@@ -55,7 +55,7 @@ export const AccountTabContent: React.FC<AccountTabProps> = observer(
 
 				<SettingsTabSection
 					title={<Trans>Email Settings</Trans>}
-					description={<Trans>Manage the email address you use to sign in to Fluxer</Trans>}
+					description={<Trans>Manage the email address you use to sign in to Atomic Radius</Trans>}
 				>
 					{isClaimed ? (
 						<>

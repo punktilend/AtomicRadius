@@ -22,7 +22,7 @@ import type {RuntimeConfigSnapshot} from '~/stores/RuntimeConfigStore';
 
 const logger = new Logger('AccountStorage');
 
-const DB_NAME = 'FluxerAccounts';
+const DB_NAME = 'AtomicRadiusAccounts';
 const DB_VERSION = 2;
 const STORE_NAME = 'accounts';
 
@@ -59,7 +59,7 @@ const MANAGED_KEY_EXACT: ReadonlySet<string> = new Set([
 	'token',
 ]);
 
-const MANAGED_KEY_PREFIXES: ReadonlyArray<string> = ['mobx', 'mobx-persist', 'persist', 'fluxer'];
+const MANAGED_KEY_PREFIXES: ReadonlyArray<string> = ['mobx', 'mobx-persist', 'persist', 'atomicradius'];
 
 function isManagedKey(key: string): boolean {
 	if (!key) {

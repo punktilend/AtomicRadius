@@ -392,6 +392,11 @@ export default () => {
 					historyApiFallback: true,
 					allowedHosts: 'all',
 					client: {
+						overlay: {
+							errors: true,
+							warnings: false,
+							runtimeErrors: false,
+						},
 						webSocketURL: 'auto://0.0.0.0:0/ws',
 					},
 					headers: {

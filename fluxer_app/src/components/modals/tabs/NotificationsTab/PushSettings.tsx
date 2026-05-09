@@ -34,7 +34,7 @@ export const PushSettings: React.FC<PushSettingsProps> = observer(({afkTimeout, 
 		<div className={styles.container}>
 			<h2 className={styles.title}>{t`Push Notification Inactive Timeout`}</h2>
 			<p className={styles.description}>
-				{t`Fluxer avoids sending push notifications to your mobile devices when you are at your computer. Use this setting to control how long you need to be inactive on desktop for before you receive push notifications, ranging from 1 minute to 10 minutes.`}
+				{t`Atomic Radius avoids sending push notifications to your mobile devices when you are at your computer. Use this setting to control how long you need to be inactive on desktop for before you receive push notifications, ranging from 1 minute to 10 minutes.`}
 			</p>
 			<Slider
 				defaultValue={afkTimeout / 60}

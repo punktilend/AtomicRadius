@@ -88,10 +88,10 @@ export const GuildMembershipCtaNagbar = observer(({isMobile}: {isMobile: boolean
 		>
 			<NagbarContent
 				isMobile={isMobile}
-				message={<Trans>Join Fluxer HQ to chat with the team and stay up to date on the latest!</Trans>}
+				message={<Trans>Join Atomic Radius HQ to chat with the team and stay up to date on the latest!</Trans>}
 				actions={
 					<NagbarButton isMobile={isMobile} onClick={handleJoinGuild} submitting={isSubmitting} disabled={isSubmitting}>
-						<Trans>Join Fluxer HQ</Trans>
+						<Trans>Join Atomic Radius HQ</Trans>
 					</NagbarButton>
 				}
 			/>

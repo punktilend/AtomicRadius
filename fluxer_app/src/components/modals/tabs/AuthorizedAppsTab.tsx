@@ -145,7 +145,7 @@ const AuthorizedAppsTab = observer(function AuthorizedAppsTab() {
 					<Trans>Authorized Applications</Trans>
 				</h2>
 				<p className={styles.description}>
-					<Trans>These applications have been granted access to your Fluxer account.</Trans>
+					<Trans>These applications have been granted access to your Atomic Radius account.</Trans>
 				</p>
 			</div>
 

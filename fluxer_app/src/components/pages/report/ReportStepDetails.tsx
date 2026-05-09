@@ -108,7 +108,7 @@ export const ReportStepDetails: React.FC<Props> = ({
 								type="url"
 								value={formValues.messageLink}
 								onChange={(e) => onFieldChange('messageLink', e.target.value)}
-								placeholder="https://fluxer.app/channels/..."
+								placeholder="https://atomicradius.app/channels/..."
 								autoComplete="off"
 								error={fieldErrors.messageLink}
 								footer={
@@ -210,7 +210,7 @@ export const ReportStepDetails: React.FC<Props> = ({
 					/>
 
 					<Input
-						label={t`Your FluxerTag (optional)`}
+						label={t`Your Radius Tag (optional)`}
 						type="text"
 						value={formValues.reporterFluxerTag}
 						onChange={(e) => onFieldChange('reporterFluxerTag', e.target.value)}

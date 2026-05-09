@@ -30,7 +30,7 @@ export const MicrophonePermissionDeniedModal = observer(() => {
 		return (
 			<ConfirmModal
 				title={t`Microphone Permission Required`}
-				description={t`Fluxer needs access to your microphone. Open System Settings → Privacy & Security → Microphone, allow Fluxer, and then restart the app.`}
+				description={t`Atomic Radius needs access to your microphone. Open System Settings → Privacy & Security → Microphone, allow Atomic Radius, and then restart the app.`}
 				primaryText={t`Open Settings`}
 				primaryVariant="primary"
 				onPrimary={() => openNativePermissionSettings('microphone')}
@@ -40,8 +40,8 @@ export const MicrophonePermissionDeniedModal = observer(() => {
 	}
 
 	const message = isDesktop()
-		? t`Fluxer needs access to your microphone. Allow microphone access in your operating system privacy settings and restart the app.`
-		: t`Fluxer needs access to your microphone to enable voice chat. Please grant microphone permission in your browser settings and try again.`;
+		? t`Atomic Radius needs access to your microphone. Allow microphone access in your operating system privacy settings and restart the app.`
+		: t`Atomic Radius needs access to your microphone to enable voice chat. Please grant microphone permission in your browser settings and try again.`;
 
 	return (
 		<ConfirmModal

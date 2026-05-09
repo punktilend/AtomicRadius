@@ -82,10 +82,10 @@ const AdvancedTab: React.FC = observer(() => {
 			{isDesktop() && (
 				<SettingsTabSection
 					title={<Trans>Desktop Startup</Trans>}
-					description={<Trans>Run Fluxer automatically when your computer starts. Or don't. Your choice!</Trans>}
+					description={<Trans>Run Atomic Radius automatically when your computer starts. Or don't. Your choice!</Trans>}
 				>
 					<Switch
-						label={<Trans>Launch Fluxer at login</Trans>}
+						label={<Trans>Launch Atomic Radius at login</Trans>}
 						description={<Trans>Applies only to the desktop app on this device.</Trans>}
 						value={platform === 'macos' ? autostartEnabled : false}
 						disabled={platform !== 'macos' || autostartBusy}
@@ -102,7 +102,7 @@ const AdvancedTab: React.FC = observer(() => {
 				<SettingsTabSection
 					title={<Trans>Desktop Window</Trans>}
 					description={
-						<Trans>Choose what Fluxer remembers about your window between restarts and reloads on this device.</Trans>
+						<Trans>Choose what Atomic Radius remembers about your window between restarts and reloads on this device.</Trans>
 					}
 				>
 					<Switch
@@ -113,7 +113,7 @@ const AdvancedTab: React.FC = observer(() => {
 					/>
 					<Switch
 						label={<Trans>Restore maximized</Trans>}
-						description={<Trans>Reopen in maximized mode if that&rsquo;s how you last used Fluxer.</Trans>}
+						description={<Trans>Reopen in maximized mode if that&rsquo;s how you last used Atomic Radius.</Trans>}
 						value={NativeWindowStateStore.rememberMaximized}
 						onChange={NativeWindowStateStore.setRememberMaximized}
 					/>
@@ -139,7 +139,7 @@ const AdvancedTab: React.FC = observer(() => {
 					description={
 						<Trans>
 							When enabled, reveals debugging menus throughout the app to inspect and copy raw JSON objects of internal
-							data structures like messages, channels, users, and communities. Also includes tools to debug the Fluxer
+							data structures like messages, channels, users, and communities. Also includes tools to debug the Atomic Radius
 							Markdown parser performance and AST for any given message.
 						</Trans>
 					}

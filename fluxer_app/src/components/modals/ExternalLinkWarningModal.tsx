@@ -63,7 +63,7 @@ export const ExternalLinkWarningModal = observer(({url, hostname}: {url: string;
 						</div>
 						<div className={styles.textContainer}>
 							<p className={styles.title}>
-								<Trans>You are about to leave Fluxer</Trans>
+								<Trans>You are about to leave Atomic Radius</Trans>
 							</p>
 							<p className={styles.description}>
 								<Trans>External links can be dangerous. Please be careful.</Trans>

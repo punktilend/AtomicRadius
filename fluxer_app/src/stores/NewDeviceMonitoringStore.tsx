@@ -184,12 +184,12 @@ class NewDeviceMonitoringStore {
 					description={
 						deviceType === 'input' ? (
 							<Trans>
-								Fluxer has found a new audio input device named <strong>{deviceName}</strong>. Do you want to switch to
+								Atomic Radius has found a new audio input device named <strong>{deviceName}</strong>. Do you want to switch to
 								it?
 							</Trans>
 						) : (
 							<Trans>
-								Fluxer has found a new audio output device named <strong>{deviceName}</strong>. Do you want to switch to
+								Atomic Radius has found a new audio output device named <strong>{deviceName}</strong>. Do you want to switch to
 								it?
 							</Trans>
 						)

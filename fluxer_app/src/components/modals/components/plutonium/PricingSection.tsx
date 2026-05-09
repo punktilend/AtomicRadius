@@ -60,7 +60,7 @@ export const PricingSection: React.FC<PricingSectionProps> = observer(
 		purchaseDisabledTooltip,
 	}) => {
 		const {t} = useLingui();
-		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Fluxer Plutonium.`;
+		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Atomic Radius Plutonium.`;
 
 		return (
 			<section className={styles.section}>

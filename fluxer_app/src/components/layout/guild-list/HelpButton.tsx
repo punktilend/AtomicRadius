@@ -39,7 +39,7 @@ export const HelpButton = observer(() => {
 	const mergedButtonRef = useMergeRefs([hoverRef, buttonRef]);
 
 	const handleHelp = () => {
-		openExternalUrl('https://fluxer.app/help');
+		openExternalUrl('https://atomicradius.app/help');
 	};
 
 	return (

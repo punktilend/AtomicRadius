@@ -25,46 +25,45 @@ function normalizeEndpoint(cdnEndpoint) {
 }
 
 function generateManifest(cdnEndpointRaw) {
-	const cdnEndpoint = normalizeEndpoint(cdnEndpointRaw);
+	const assetEndpoint = '';
 
 	const manifest = {
-		name: 'Fluxer',
-		short_name: 'Fluxer',
-		description:
-			'Fluxer is an open-source, independent instant messaging and VoIP platform. Built for friends, groups, and communities.',
+		name: 'Atomic Radius',
+		short_name: 'Atomic Radius',
+		description: 'Atomic Radius is private messaging for your inner circle.',
 		start_url: '/',
 		display: 'standalone',
 		orientation: 'portrait-primary',
-		theme_color: '#4641D9',
-		background_color: '#2b2d31',
+		theme_color: '#39D353',
+		background_color: '#0D1F0D',
 		categories: ['social', 'communication'],
 		lang: 'en',
 		scope: '/',
 		icons: [
 			{
-				src: `${cdnEndpoint}/web/android-chrome-192x192.png`,
+				src: `${assetEndpoint}/web/android-chrome-192x192.png`,
 				sizes: '192x192',
 				type: 'image/png',
 				purpose: 'maskable any',
 			},
 			{
-				src: `${cdnEndpoint}/web/android-chrome-512x512.png`,
+				src: `${assetEndpoint}/web/android-chrome-512x512.png`,
 				sizes: '512x512',
 				type: 'image/png',
 				purpose: 'maskable any',
 			},
 			{
-				src: `${cdnEndpoint}/web/apple-touch-icon.png`,
+				src: `${assetEndpoint}/web/apple-touch-icon.png`,
 				sizes: '180x180',
 				type: 'image/png',
 			},
 			{
-				src: `${cdnEndpoint}/web/favicon-32x32.png`,
+				src: `${assetEndpoint}/web/favicon-32x32.png`,
 				sizes: '32x32',
 				type: 'image/png',
 			},
 			{
-				src: `${cdnEndpoint}/web/favicon-16x16.png`,
+				src: `${assetEndpoint}/web/favicon-16x16.png`,
 				sizes: '16x16',
 				type: 'image/png',
 			},
@@ -75,14 +74,14 @@ function generateManifest(cdnEndpointRaw) {
 }
 
 function generateBrowserConfig(cdnEndpointRaw) {
-	const cdnEndpoint = normalizeEndpoint(cdnEndpointRaw);
+	const assetEndpoint = '';
 
 	return `<?xml version="1.0" encoding="utf-8"?>
 <browserconfig>
   <msapplication>
     <tile>
-      <square150x150logo src="${cdnEndpoint}/web/mstile-150x150.png"/>
-      <TileColor>#4641D9</TileColor>
+      <square150x150logo src="${assetEndpoint}/web/mstile-150x150.png"/>
+      <TileColor>#39D353</TileColor>
     </tile>
   </msapplication>
 </browserconfig>`;

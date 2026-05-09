@@ -351,7 +351,7 @@ export const ReportPage = observer(() => {
 				if (!userId && !userTag) {
 					dispatch({
 						type: 'SET_ERROR',
-						message: t`Provide either a user ID or a FluxerTag for the person you are reporting.`,
+						message: t`Provide either a user ID or a Radius Tag for the person you are reporting.`,
 					});
 					return;
 				}

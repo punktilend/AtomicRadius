@@ -32,7 +32,7 @@ export const AddFriendView = observer(() => {
 					<Trans>Add Friend</Trans>
 				</h2>
 				<p className={styles.subtitle}>
-					<Trans>You can add friends with their FluxerTag.</Trans>
+					<Trans>You can add friends with their Radius Tag.</Trans>
 				</p>
 				<div className={styles.formContainer}>
 					<AddFriendForm />

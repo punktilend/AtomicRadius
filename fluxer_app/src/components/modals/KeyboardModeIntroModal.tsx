@@ -43,7 +43,7 @@ export const KeyboardModeIntroModal: React.FC = () => {
 			<Modal.Header title={title} />
 			<Modal.Content className={styles.content}>
 				<p className={styles.description}>
-					{t`You just pressed Tab. Keyboard Mode is now on so you can navigate Fluxer without a mouse.`}
+					{t`You just pressed Tab. Keyboard Mode is now on so you can navigate Atomic Radius without a mouse.`}
 				</p>
 
 				<ul className={styles.tips}>

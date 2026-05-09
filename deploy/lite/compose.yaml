@@ -1,0 +1,115 @@
+services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../../fluxer_app/dist:/app/dist:ro
+    restart: unless-stopped
+
+  api:
+    image: node:24-bookworm-slim
+    working_dir: /workspace
+    command: bash -lc "corepack enable pnpm && CI=true pnpm install --prod=false && exec npm run start"
+    env_file:
+      - ./.env
+    environment:
+      CI: "true"
+      FLUXER_METRICS_HOST: ""
+      NODE_OPTIONS: "--max-old-space-size=192"
+    volumes:
+      - ../../fluxer_api:/workspace
+      - api_node_modules:/workspace/node_modules
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      cassandra:
+        condition: service_healthy
+    restart: unless-stopped
+
+  gateway:
+    image: erlang:28-slim
+    working_dir: /workspace
+    command: bash -lc "apt-get update && apt-get install -y --no-install-recommends build-essential linux-libc-dev curl ca-certificates gettext-base git inotify-tools && curl -fsSL https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3 -o /usr/local/bin/rebar3 && chmod +x /usr/local/bin/rebar3 && rebar3 compile && exec ./docker-entrypoint.sh"
+    hostname: gateway
+    env_file:
+      - ./.env
+    environment:
+      RELEASE_NODE: fluxer_gateway@gateway
+      LOGGER_LEVEL: info
+      CLUSTER_NAME: fluxer_gateway
+      CLUSTER_DISCOVERY_DNS: gateway
+      NODE_COOKIE: ${ERLANG_COOKIE:-fluxer_lite_cookie}
+      FLUXER_METRICS_HOST: ""
+    volumes:
+      - ../../fluxer_gateway:/workspace
+      - gateway_build:/workspace/_build
+    depends_on:
+      api:
+        condition: service_started
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fluxer
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  cassandra:
+    image: cassandra:4.1
+    environment:
+      MAX_HEAP_SIZE: 256M
+      HEAP_NEWSIZE: 64M
+    command:
+      - bash
+      - -lc
+      - |
+        sed -ri 's/^authenticator:.*/authenticator: PasswordAuthenticator/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^authorizer:.*/authorizer: CassandraAuthorizer/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^num_tokens:.*/num_tokens: 16/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^concurrent_reads:.*/concurrent_reads: 8/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^concurrent_writes:.*/concurrent_writes: 8/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^concurrent_counter_writes:.*/concurrent_counter_writes: 8/' /etc/cassandra/cassandra.yaml
+        sed -ri 's/^memtable_flush_writers:.*/memtable_flush_writers: 1/' /etc/cassandra/cassandra.yaml
+        listen_ip=$(hostname -i | awk '{print $1}')
+        sed -ri "s/^listen_address:.*/listen_address: $${listen_ip}/" /etc/cassandra/cassandra.yaml
+        sed -ri "s/^# broadcast_address:.*/broadcast_address: $${listen_ip}/" /etc/cassandra/cassandra.yaml
+        sed -ri "s/- seeds: \"127.0.0.1:7000\"/- seeds: \"$${listen_ip}:7000\"/" /etc/cassandra/cassandra.yaml
+        sed -ri 's/^rpc_address:.*/rpc_address: 0.0.0.0/' /etc/cassandra/cassandra.yaml
+        grep -q '^broadcast_rpc_address:' /etc/cassandra/cassandra.yaml && sed -ri 's/^broadcast_rpc_address:.*/broadcast_rpc_address: cassandra/' /etc/cassandra/cassandra.yaml || printf 'broadcast_rpc_address: cassandra\n' >> /etc/cassandra/cassandra.yaml
+        chown -R cassandra:cassandra /var/lib/cassandra
+        exec gosu cassandra /opt/cassandra/bin/cassandra -f
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/cassandra/bin/cqlsh -u cassandra -p cassandra --connect-timeout=20 --request-timeout=60 -e 'describe cluster'"]
+      interval: 30s
+      timeout: 30s
+      retries: 20
+      start_period: 240s
+
+  redis:
+    image: valkey/valkey:latest
+    command: valkey-server --save 60 1 --loglevel warning --maxmemory 64mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  api_node_modules:
+  gateway_build:
+  postgres_data:
+  cassandra_data:
+  redis_data:

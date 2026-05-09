@@ -40,7 +40,7 @@ export const ApplicationsList: React.FC<ApplicationsListProps> = observer(({appl
 				<StatusSlate
 					Icon={AppWindowIcon}
 					title={<Trans>No applications yet</Trans>}
-					description={<Trans>Create your first application to get started with the Fluxer API.</Trans>}
+					description={<Trans>Create your first application to get started with the Atomic Radius API.</Trans>}
 				/>
 			</div>
 		);

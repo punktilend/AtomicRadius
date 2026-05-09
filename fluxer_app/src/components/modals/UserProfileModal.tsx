@@ -1146,7 +1146,7 @@ export const UserProfileModal: UserProfileModalComponent = observer(
 								props.onClose();
 							}}
 						>
-							{t`Copy FluxerTag`}
+							{t`Copy Radius Tag`}
 						</MenuItem>
 						<MenuItem
 							icon={<CopyUserIdIcon />}

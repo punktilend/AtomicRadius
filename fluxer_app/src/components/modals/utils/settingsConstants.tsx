@@ -144,7 +144,7 @@ const ALL_TABS_DESCRIPTORS: Array<SettingsTabDescriptor> = [
 	{
 		type: 'plutonium',
 		category: 'user_settings',
-		label: msg`Fluxer Plutonium`,
+		label: msg`Atomic Radius Plutonium`,
 		icon: CrownIcon,
 	},
 	{

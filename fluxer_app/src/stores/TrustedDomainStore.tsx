@@ -21,11 +21,11 @@ import {makeAutoObservable} from 'mobx';
 import {makePersistent} from '~/lib/MobXPersistence';
 
 const IMPLICITLY_TRUSTED_DOMAINS = [
-	'fluxer.app',
-	'*.fluxer.app',
-	'fluxer.gg',
-	'fluxer.gift',
-	'fluxerusercontent.com',
+	'atomicradius.app',
+	'*.atomicradius.app',
+	'atomicradius.app',
+	'atomicradius.app',
+	'atomicradiuscontent.com',
 	'fluxerstatic.com',
 ] as const;
 

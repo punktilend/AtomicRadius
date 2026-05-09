@@ -13,6 +13,8 @@
 /fluxer_marketing/build
 
 # Caches & editor metadata
+/.claude/
+/CLAUDE.md
 **/.cache
 **/.*cache
 **/.pnpm-store
@@ -81,6 +83,8 @@ next-env.d.ts
 /fluxer_gateway/config/vm.args
 /fluxer_marketing/priv/static/app.css
 /fluxer_marketing/priv/locales
+/atomicradius-lite.tar.gz
+/fluxer_app/dist-electron/
 geoip_data
 livekit.yaml
 fluxer.yaml

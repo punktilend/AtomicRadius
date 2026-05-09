@@ -59,7 +59,7 @@ export const VisionarySection: React.FC<VisionarySectionProps> = observer(
 		const tooltipText: string | (() => React.ReactNode) =
 			purchaseDisabledTooltip != null
 				? () => purchaseDisabledTooltip
-				: t`Claim your account to purchase Fluxer Plutonium.`;
+				: t`Claim your account to purchase Atomic Radius Plutonium.`;
 
 		return (
 			<section className={styles.section}>

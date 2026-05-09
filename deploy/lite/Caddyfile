@@ -1,0 +1,25 @@
+:80, atomicradius.app {
+  encode zstd gzip
+
+  @api path /api/*
+  handle @api {
+    handle_path /api/* {
+      reverse_proxy api:8080
+    }
+  }
+
+  @gateway path /gateway /gateway/*
+  handle @gateway {
+    uri strip_prefix /gateway
+    reverse_proxy gateway:8080
+  }
+
+  handle {
+    root * /app/dist
+    header {
+      Cache-Control "no-store"
+    }
+    try_files {path} /index.html
+    file_server
+  }
+}

@@ -37,15 +37,15 @@ export const NetworkErrorScreen: React.FC = () => {
 				</h1>
 				<p className={styles.errorFallbackDescription}>
 					<Trans>
-						We're having trouble connecting to Fluxer's servers. This could be a temporary network issue or scheduled
+						We're having trouble connecting to Atomic Radius's servers. This could be a temporary network issue or scheduled
 						maintenance.
 					</Trans>
 				</p>
 				<p className={styles.errorFallbackDescription}>
 					<Trans>
 						Check our{' '}
-						<a href="https://bsky.app/profile/fluxer.app" target="_blank" rel="noopener noreferrer">
-							Bluesky (@fluxer.app)
+						<a href="https://bsky.app/profile/atomicradius.app" target="_blank" rel="noopener noreferrer">
+							Bluesky (@atomicradius.app)
 						</a>{' '}
 						for status updates.
 					</Trans>

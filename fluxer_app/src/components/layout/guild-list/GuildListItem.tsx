@@ -226,7 +226,7 @@ export const GuildListItem = observer(
 									<span className={styles.guildTooltipMessage}>We fluxed up! Hang tight, we're working on it.</span>
 								)}
 								{guild.features.has(GuildFeatures.UNAVAILABLE_FOR_EVERYONE_BUT_STAFF) && (
-									<span className={styles.guildTooltipError}>Only accessible to Fluxer staff</span>
+									<span className={styles.guildTooltipError}>Only accessible to Atomic Radius staff</span>
 								)}
 								{canManageGuild && guild.features.has(GuildFeatures.INVITES_DISABLED) && (
 									<span

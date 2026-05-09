@@ -185,7 +185,7 @@ export const IARModal: React.FC<IARModalProps> = observer(({context}) => {
 				<div className={styles.container}>
 					<p className={styles.description}>
 						<Trans>
-							Thank you for helping keep Fluxer safe. Reports are reviewed by our Safety Team. False reports may result
+							Thank you for helping keep Atomic Radius safe. Reports are reviewed by our Safety Team. False reports may result
 							in action against your account.
 						</Trans>
 					</p>

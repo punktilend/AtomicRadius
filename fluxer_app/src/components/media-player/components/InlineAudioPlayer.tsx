@@ -21,7 +21,7 @@ import {useLingui} from '@lingui/react/macro';
 import {DownloadSimpleIcon, FileAudioIcon, PauseIcon, PlayIcon, StarIcon} from '@phosphor-icons/react';
 import {clsx} from 'clsx';
 import type React from 'react';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useRef} from 'react';
 import {Tooltip} from '~/components/uikit/Tooltip/Tooltip';
 import {useMediaPlayer} from '../hooks/useMediaPlayer';
 import {useMediaProgress} from '../hooks/useMediaProgress';
@@ -78,9 +78,7 @@ export function InlineAudioPlayer({
 	const {t} = useLingui();
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const [hasStarted, setHasStarted] = useState(false);
-
-	const {mediaRef, state, play, toggle} = useMediaPlayer({
+	const {mediaRef, state, toggle} = useMediaPlayer({
 		persistVolume: true,
 	});
 
@@ -92,18 +90,6 @@ export function InlineAudioPlayer({
 	const {volume, isMuted, setVolume, toggleMute} = useMediaVolume({
 		mediaRef,
 	});
-
-	const hasAutoPlayedRef = useRef(false);
-	useEffect(() => {
-		if (hasStarted && !hasAutoPlayedRef.current) {
-			hasAutoPlayedRef.current = true;
-			const timer = setTimeout(() => {
-				play();
-			}, 0);
-			return () => clearTimeout(timer);
-		}
-		return undefined;
-	}, [hasStarted, play]);
 
 	const displayDuration = initialDuration || duration;
 
@@ -121,13 +107,9 @@ export function InlineAudioPlayer({
 		(e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
-			if (!hasStarted) {
-				setHasStarted(true);
-			} else {
-				toggle();
-			}
+			toggle();
 		},
-		[hasStarted, toggle],
+		[toggle],
 	);
 
 	const handleSeek = useCallback(
@@ -146,7 +128,7 @@ export function InlineAudioPlayer({
 			aria-label={t`Audio Player`}
 		>
 			{/* biome-ignore lint/a11y/useMediaCaption: Audio player doesn't require captions */}
-			<audio ref={mediaRef as React.RefObject<HTMLAudioElement>} src={hasStarted ? src : undefined} preload="none" />
+			<audio ref={mediaRef as React.RefObject<HTMLAudioElement>} src={src} preload="none" />
 
 			<div className={styles.header}>
 				<div className={styles.iconContainer}>

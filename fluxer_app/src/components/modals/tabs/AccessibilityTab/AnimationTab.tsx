@@ -99,7 +99,7 @@ export const AnimationTabContent: React.FC = observer(() => {
 			/>
 
 			<Switch
-				label={mobileLayout.enabled ? t`Automatically play GIFs` : t`Automatically play GIFs when Fluxer is focused`}
+				label={mobileLayout.enabled ? t`Automatically play GIFs` : t`Automatically play GIFs when Atomic Radius is focused`}
 				description={
 					mobileLayout.enabled && !mobileGifAutoPlayOverridden
 						? t`Defaults to off on mobile to preserve battery life and data usage.`

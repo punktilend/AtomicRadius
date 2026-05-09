@@ -338,7 +338,7 @@ const BetaCodesTab: React.FC = observer(() => {
 				title={<Trans>Beta Codes</Trans>}
 				description={
 					<Trans>
-						Generate up to {MAX_UNCLAIMED_BETA_CODES} unclaimed beta codes to invite friends to Fluxer. You can create 3
+						Generate up to {MAX_UNCLAIMED_BETA_CODES} unclaimed beta codes to invite friends to Atomic Radius. You can create 3
 						codes per week.
 					</Trans>
 				}

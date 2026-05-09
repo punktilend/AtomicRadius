@@ -22,8 +22,8 @@ const config = (() => {
 	const channel = process.env.BUILD_CHANNEL === 'canary' ? 'canary' : 'stable';
 	const isCanary = channel === 'canary';
 
-	const appId = isCanary ? 'app.fluxer.canary' : 'app.fluxer';
-	const productName = isCanary ? 'Fluxer Canary' : 'Fluxer';
+	const appId = isCanary ? 'com.atomicradius.canary' : 'com.atomicradius';
+	const productName = isCanary ? 'Atomic Radius Canary' : 'Atomic Radius';
 	const iconsDir = isCanary ? 'electron-build-resources/icons-canary' : 'electron-build-resources/icons-stable';
 
 	const macEntitlements = isCanary
@@ -38,7 +38,7 @@ const config = (() => {
 		? 'https://fluxerstatic.com/web/icons/desktop/canary/icon.ico'
 		: 'https://fluxerstatic.com/web/icons/desktop/stable/icon.ico';
 
-	const linuxExecutableName = isCanary ? 'fluxercanary' : 'fluxer';
+	const linuxExecutableName = isCanary ? 'atomic-radius-canary' : 'atomic-radius';
 	const linuxSynopsis = productName;
 	const linuxDescription = productName;
 
@@ -47,7 +47,7 @@ const config = (() => {
 		productName,
 		copyright: 'Copyright (C) 2026 Fluxer Contributors',
 
-		artifactName: `fluxer-${channel}-\${version}-\${arch}.\${ext}`,
+		artifactName: `atomic-radius-${channel}-\${version}-\${arch}.\${ext}`,
 
 		directories: {
 			output: 'dist-electron',
@@ -105,9 +105,10 @@ const config = (() => {
 			provisioningProfile: macProfile,
 			extendInfo: {
 				CFBundleIconName: 'AppIcon',
-				NSMicrophoneUsageDescription: 'Fluxer needs access to your microphone for voice chat.',
-				NSCameraUsageDescription: 'Fluxer needs access to your camera for video chat.',
-				NSInputMonitoringUsageDescription: 'Fluxer needs Input Monitoring access for global shortcuts and hotkeys.',
+				NSMicrophoneUsageDescription: 'Atomic Radius needs access to your microphone for voice chat.',
+				NSCameraUsageDescription: 'Atomic Radius needs access to your camera for video chat.',
+				NSInputMonitoringUsageDescription:
+					'Atomic Radius needs Input Monitoring access for global shortcuts and hotkeys.',
 			},
 			notarize: true,
 			target: [
@@ -143,10 +144,10 @@ const config = (() => {
 			description: linuxDescription,
 			executableName: linuxExecutableName,
 			target: ['dir', 'AppImage', 'deb', 'rpm', 'tar.gz'],
-			mimeTypes: ['x-scheme-handler/fluxer'],
+			mimeTypes: ['x-scheme-handler/atomicradius', 'x-scheme-handler/fluxer'],
 		},
 
-		protocols: [{name: 'Fluxer', schemes: ['fluxer']}],
+		protocols: [{name: 'Atomic Radius', schemes: ['atomicradius', 'fluxer']}],
 	};
 })();
 

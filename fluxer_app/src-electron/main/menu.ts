@@ -23,7 +23,7 @@ import {getMainWindow} from './window.js';
 
 export function createApplicationMenu(): void {
 	const isCanary = BUILD_CHANNEL === 'canary';
-	const appName = isCanary ? 'Fluxer Canary' : 'Fluxer';
+	const appName = isCanary ? 'Atomic Radius Canary' : 'Atomic Radius';
 	const isMac = process.platform === 'darwin';
 
 	const template: Array<MenuItemConstructorOptions> = [];
@@ -183,7 +183,7 @@ export function createApplicationMenu(): void {
 			{
 				label: 'Website',
 				click: async () => {
-					await shell.openExternal('https://fluxer.app');
+					await shell.openExternal('https://web.fluxer.app');
 				},
 			},
 			{

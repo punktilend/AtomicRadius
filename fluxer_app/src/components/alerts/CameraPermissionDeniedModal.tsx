@@ -29,7 +29,7 @@ export const CameraPermissionDeniedModal = observer(() => {
 		return (
 			<ConfirmModal
 				title={t`Camera Permission Required`}
-				description={t`Fluxer needs access to your camera. Open System Settings → Privacy & Security → Camera, allow Fluxer, and then restart the app.`}
+				description={t`Atomic Radius needs access to your camera. Open System Settings → Privacy & Security → Camera, allow Atomic Radius, and then restart the app.`}
 				primaryText={t`Open Settings`}
 				primaryVariant="primary"
 				onPrimary={() => openNativePermissionSettings('camera')}
@@ -39,8 +39,8 @@ export const CameraPermissionDeniedModal = observer(() => {
 	}
 
 	const message = isDesktop()
-		? t`Fluxer needs access to your camera. Allow camera access in your operating system privacy settings and restart the app.`
-		: t`Fluxer needs access to your camera to enable video chat. Please grant camera permission in your browser settings and try again.`;
+		? t`Atomic Radius needs access to your camera. Allow camera access in your operating system privacy settings and restart the app.`
+		: t`Atomic Radius needs access to your camera to enable video chat. Please grant camera permission in your browser settings and try again.`;
 
 	return (
 		<ConfirmModal

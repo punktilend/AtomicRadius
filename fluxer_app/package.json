@@ -11,11 +11,14 @@
 		"**/*.css"
 	],
 	"scripts": {
-		"build": "pnpm wasm:codegen && pnpm generate:colors && pnpm generate:masks && pnpm generate:css-types && tsc --noEmit && pnpm lingui:compile && rm -rf dist && rspack build --mode production && npx tsx scripts/build-sw.mjs",
-		"dev": "pnpm wasm:codegen && pnpm generate:colors && pnpm generate:masks && pnpm generate:css-types && pnpm lingui:compile && rm -rf dist && rspack serve",
+		"build": "pnpm wasm:codegen && pnpm generate:colors && pnpm generate:masks && pnpm generate:css-types && tsc --noEmit && pnpm lingui:compile && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && rspack build --mode production && npx tsx scripts/build-sw.mjs",
+		"dev": "pnpm wasm:codegen && pnpm generate:colors && pnpm generate:masks && pnpm generate:css-types && pnpm lingui:compile && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && cross-env NODE_ENV=development rspack serve --port 3000",
 		"generate:css-types": "tcm src --pattern '**/*.module.css'",
-		"electron:build:canary": "BUILD_CHANNEL=canary pnpm electron:compile && BUILD_CHANNEL=canary electron-builder --config electron-builder.canary.yaml",
-		"electron:build:stable": "pnpm electron:compile && electron-builder --config electron-builder.yaml",
+		"electron:build:canary": "cross-env BUILD_CHANNEL=canary pnpm electron:compile && cross-env BUILD_CHANNEL=canary electron-builder --config electron-builder.config.cjs",
+		"electron:build:linux": "cross-env BUILD_CHANNEL=stable pnpm electron:compile && cross-env BUILD_CHANNEL=stable electron-builder --config electron-builder.config.cjs --linux",
+		"electron:build:linux:tar": "cross-env BUILD_CHANNEL=stable pnpm electron:compile && cross-env BUILD_CHANNEL=stable electron-builder --config electron-builder.config.cjs --linux tar.gz",
+		"electron:build:stable": "cross-env BUILD_CHANNEL=stable pnpm electron:compile && cross-env BUILD_CHANNEL=stable electron-builder --config electron-builder.config.cjs",
+		"electron:build:windows": "cross-env BUILD_CHANNEL=stable pnpm electron:compile && cross-env BUILD_CHANNEL=stable electron-builder --config electron-builder.config.cjs --win",
 		"electron:compile": "node scripts/build-electron.mjs",
 		"electron:dev": "pnpm electron:compile && electron .",
 		"generate:colors": "cd scripts && go run ./cmd/generate-color-system",
@@ -129,6 +132,7 @@
 		"autoprefixer": "^10.4.23",
 		"browserslist": "^4.28.1",
 		"chokidar": "^4.0.0",
+		"cross-env": "^10.1.0",
 		"electron": "39.2.7",
 		"electron-builder": "26.0.12",
 		"electron-builder-squirrel-windows": "^26.0.12",
@@ -185,10 +189,13 @@
 			"core-js",
 			"core-js-pure",
 			"electron",
+			"electron-winstaller",
+			"esbuild",
 			"node-mac-permissions",
 			"oxc-resolver",
 			"protobufjs",
-			"uiohook-napi"
+			"uiohook-napi",
+			"wasm-pack"
 		]
 	}
 }

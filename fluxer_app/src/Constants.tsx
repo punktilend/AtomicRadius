@@ -40,7 +40,7 @@ export function getOAuth2ScopeDescription(i18n: I18n, scope: OAuth2Scope): strin
 	return i18n._(OAuth2ScopeDescriptorsInternal[scope]);
 }
 
-export const DEFAULT_ACCENT_COLOR = '#4641D9';
+export const DEFAULT_ACCENT_COLOR = '#39D353';
 
 export const MAX_GUILDS_PREMIUM = 200;
 export const MAX_GUILDS_NON_PREMIUM = 100;

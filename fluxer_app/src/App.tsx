@@ -419,7 +419,7 @@ export const AppWrapper = observer(({children}: AppWrapperProps) => {
 	]);
 
 	React.useEffect(() => {
-		const styleElementId = 'fluxer-custom-theme-style';
+		const styleElementId = 'ar-custom-theme-style';
 		const existing = document.getElementById(styleElementId) as HTMLStyleElement | null;
 
 		const css = customThemeCss?.trim() ?? '';

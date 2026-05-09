@@ -90,11 +90,11 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = observer(({onSuccess}
 			case APIErrorCodes.CANNOT_SEND_FRIEND_REQUEST_TO_SELF:
 				return t`You cannot send a friend request to yourself.`;
 			case APIErrorCodes.NO_USERS_WITH_FLUXERTAG_EXIST:
-				return t`No user found with that FluxerTag.`;
+				return t`No user found with that Radius Tag.`;
 			case APIErrorCodes.ALREADY_FRIENDS:
 				return t`You are already friends with this user.`;
 			case APIErrorCodes.DISCRIMINATOR_REQUIRED:
-				return t`Please enter a valid FluxerTag (Username#0000).`;
+				return t`Please enter a valid Radius Tag (Username#0000).`;
 			default:
 				return t`Unable to send friend request. Please try again.`;
 		}
@@ -157,7 +157,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = observer(({onSuccess}
 						resultStatus === 'error' && styles.inputError,
 					)}
 					disabled={isLoading}
-					aria-label={t`Friend's FluxerTag`}
+					aria-label={t`Friend's Radius Tag`}
 					rightElement={!isMobile ? submitButton : undefined}
 				/>
 				{isMobile && submitButton}

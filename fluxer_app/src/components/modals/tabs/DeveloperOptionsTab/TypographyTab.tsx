@@ -133,7 +133,7 @@ export const TypographyTabContent: React.FC = observer(() => {
 				</h2>
 				<p className={styles.description}>
 					<Trans>
-						Preview all available fonts, weights, and styles across different languages supported by Fluxer.
+						Preview all available fonts, weights, and styles across different languages supported by Atomic Radius.
 					</Trans>
 				</p>
 			</div>
@@ -332,31 +332,31 @@ export const TypographyTabContent: React.FC = observer(() => {
 				<div className={styles.multilingualCard}>
 					<div className={styles.multilingualList} style={{fontFamily: 'var(--font-sans)', lineHeight: 1.6}}>
 						<div className={styles.multilingualItem}>
-							<strong>English:</strong> Welcome to Fluxer's typography showcase
+							<strong>English:</strong> Welcome to Atomic Radius's typography showcase
 						</div>
 						<div className={styles.multilingualItem} lang="ja">
-							<strong>日本語:</strong> フラクサーのタイポグラフィショーケースへようこそ
+							<strong>日本語:</strong> アトミックレディアスのタイポグラフィショーケースへようこそ
 						</div>
 						<div className={styles.multilingualItem} lang="ko">
-							<strong>한국어:</strong> Fluxer의 타이포그래피 쇼케이스에 오신 것을 환영합니다
+							<strong>한국어:</strong> Atomic Radius의 타이포그래피 쇼케이스에 오신 것을 환영합니다
 						</div>
 						<div className={styles.multilingualItem} lang="zh-CN">
-							<strong>简体中文:</strong> 欢迎来到 Fluxer 的字体展示
+							<strong>简体中文:</strong> 欢迎来到 Atomic Radius 的字体展示
 						</div>
 						<div className={styles.multilingualItem} lang="zh-TW">
-							<strong>繁體中文:</strong> 歡迎來到 Fluxer 的字體展示
+							<strong>繁體中文:</strong> 歡迎來到 Atomic Radius 的字體展示
 						</div>
 						<div className={styles.multilingualItem} lang="ar" dir="rtl">
-							<strong>العربية:</strong> مرحباً بك في عرض طباعة Fluxer
+							<strong>العربية:</strong> مرحباً بك في عرض طباعة Atomic Radius
 						</div>
 						<div className={styles.multilingualItem} lang="he">
-							<strong>עברית:</strong> ברוכים הבאים לתצוגת הטיפוגרפיה של Fluxer
+							<strong>עברית:</strong> ברוכים הבאים לתצוגת הטיפוגרפיה של Atomic Radius
 						</div>
 						<div className={styles.multilingualItem} lang="hi">
-							<strong>हिंदी:</strong> Fluxer के टाइपोग्राफी शोकेस में आपका स्वागत है
+							<strong>हिंदी:</strong> Atomic Radius के टाइपोग्राफी शोकेस में आपका स्वागत है
 						</div>
 						<div className={styles.multilingualItem} lang="th">
-							<strong>ไทย:</strong> ยินดีต้อนรับสู่การจัดแสดงพิมพ์ของ Fluxer
+							<strong>ไทย:</strong> ยินดีต้อนรับสู่การจัดแสดงพิมพ์ของ Atomic Radius
 						</div>
 					</div>
 				</div>

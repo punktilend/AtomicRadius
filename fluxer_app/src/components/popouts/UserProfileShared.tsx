@@ -94,7 +94,7 @@ export const UserProfileMembershipInfo: React.FC<{profile: ProfileRecord; user: 
 					</span>
 					<div className={styles.membershipDates}>
 						<div className={styles.membershipDate}>
-							<Tooltip text={t`Fluxer`}>
+							<Tooltip text={t`Atomic Radius`}>
 								<div className={styles.membershipIcon}>
 									<FluxerIcon className={clsx(styles.iconSmall, styles.textChat)} />
 								</div>
@@ -125,7 +125,7 @@ export const UserProfileMembershipInfo: React.FC<{profile: ProfileRecord; user: 
 		return (
 			<div className={styles.membershipContainer}>
 				<span className={styles.membershipTitle}>
-					<Trans>Fluxer Member Since</Trans>
+					<Trans>Atomic Radius Member Since</Trans>
 				</span>
 				<span className={styles.membershipDateText}>{DateUtils.getFormattedShortDate(user.createdAt)}</span>
 			</div>
