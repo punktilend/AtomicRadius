@@ -155,6 +155,10 @@ bootstrap().catch(async (error) => {
 		console.error('Failed to render error screen:', renderError);
 		document.body.style.margin = '0';
 		document.body.style.minHeight = '100vh';
+		document.body.style.background = '#171b21';
+		document.body.style.color = '#f4f7fb';
+		document.body.style.fontFamily =
+			'"IBM Plex Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 		document.body.innerHTML = `
 			<div
 				style="
@@ -167,16 +171,19 @@ bootstrap().catch(async (error) => {
 					box-sizing: border-box;
 				"
 			>
-				<p
-					style="
-						max-width: 32rem;
-						font-size: 1.25rem;
-						line-height: 1.5;
-						margin: 0;
-					"
-				>
-					Something went wrong and the app couldn't load. Please try refreshing the page.
-				</p>
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; max-width: 24rem;">
+					<svg width="96" height="96" viewBox="0 0 128 128" role="img" aria-label="Atomic Radius">
+						<circle cx="64" cy="64" r="58" fill="#39D353"></circle>
+						<ellipse cx="64" cy="64" rx="43" ry="15" fill="none" stroke="#ffffff" stroke-width="4.5"></ellipse>
+						<ellipse cx="64" cy="64" rx="43" ry="15" fill="none" stroke="#ffffff" stroke-width="4.5" transform="rotate(60 64 64)"></ellipse>
+						<ellipse cx="64" cy="64" rx="43" ry="15" fill="none" stroke="#ffffff" stroke-width="4.5" transform="rotate(120 64 64)"></ellipse>
+						<circle cx="64" cy="64" r="8" fill="#ffffff"></circle>
+					</svg>
+					<h1 style="font-size: 1.75rem; line-height: 1.1; margin: 0;">Atomic Radius</h1>
+					<p style="color: #b8c2cc; font-size: 1rem; line-height: 1.5; margin: 0;">
+						Something went wrong and the app couldn't load. You are on Atomic Radius. Please try refreshing the page.
+					</p>
+				</div>
 			</div>
 		`;
 	}
