@@ -106,9 +106,12 @@ async function bootstrap(): Promise<void> {
 	CaptchaInterceptor.setI18n(i18n);
 
 	try {
-		await Promise.all([RuntimeConfigStore.waitForInit(), GeoIPStore.fetchGeoData()]);
+		await RuntimeConfigStore.waitForInit();
+		GeoIPStore.fetchGeoData().catch((error) => {
+			console.warn('Failed to fetch GeoIP data:', error);
+		});
 	} catch (error) {
-		console.error('Failed to initialize runtime config or fetch GeoIP data:', error);
+		console.error('Failed to initialize runtime config:', error);
 		const root = ReactDOM.createRoot(document.getElementById('root')!);
 		root.render(
 			<I18nProvider i18n={i18n}>
