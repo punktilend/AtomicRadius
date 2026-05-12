@@ -230,6 +230,12 @@
 	gap: 0.5rem;
 }
 
+.socialActionsCompact {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
 .loginForm {
 	margin-top: 2rem;
 	display: flex;

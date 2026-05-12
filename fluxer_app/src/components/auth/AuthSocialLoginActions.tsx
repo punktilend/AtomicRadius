@@ -27,10 +27,12 @@ import {Button} from '~/components/uikit/Button/Button';
 export function AuthSocialLoginActions({
 	className,
 	disabled = false,
+	leadingContent,
 	redirectPath = '/',
 }: {
 	className?: string;
 	disabled?: boolean;
+	leadingContent?: React.ReactNode;
 	redirectPath?: string;
 }) {
 	const [providers, setProviders] = useState<Array<SocialAuthProvider>>([]);
@@ -53,20 +55,23 @@ export function AuthSocialLoginActions({
 	if (providers.length === 0) return null;
 
 	return (
-		<div className={className}>
-			{providers.map((provider) => (
-				<Button
-					key={provider.id}
-					type="button"
-					fitContainer
-					variant="secondary"
-					disabled={disabled}
-					leftIcon={provider.id === 'apple' ? <AppleLogoIcon size={16} /> : <GoogleLogoIcon size={16} />}
-					onClick={() => AuthenticationActionCreators.startSocialAuth(provider.id, redirectPath)}
-				>
-					{provider.id === 'apple' ? <Trans>Continue with Apple</Trans> : <Trans>Continue with Google</Trans>}
-				</Button>
-			))}
-		</div>
+		<>
+			{leadingContent}
+			<div className={className}>
+				{providers.map((provider) => (
+					<Button
+						key={provider.id}
+						type="button"
+						fitContainer
+						variant="secondary"
+						disabled={disabled}
+						leftIcon={provider.id === 'apple' ? <AppleLogoIcon size={16} /> : <GoogleLogoIcon size={16} />}
+						onClick={() => AuthenticationActionCreators.startSocialAuth(provider.id, redirectPath)}
+					>
+						{provider.id === 'apple' ? <Trans>Continue with Apple</Trans> : <Trans>Continue with Google</Trans>}
+					</Button>
+				))}
+			</div>
+		</>
 	);
 }

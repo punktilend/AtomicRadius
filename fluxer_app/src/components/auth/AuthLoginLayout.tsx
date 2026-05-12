@@ -238,12 +238,6 @@ const AuthLoginLayout = observer(function AuthLoginLayout({
 
 			{!showAccountSelector && switchError ? <div className={styles.loginNotice}>{switchError}</div> : null}
 
-			<AuthSocialLoginActions
-				className={styles.passkeyActions}
-				disabled={passkeyControlsDisabled}
-				redirectPath={redirectPath || '/channels/@me'}
-			/>
-
 			<AuthLoginEmailPasswordForm
 				form={form}
 				isLoading={isLoading}
@@ -265,6 +259,12 @@ const AuthLoginLayout = observer(function AuthLoginLayout({
 					dividerLine: styles.dividerLine,
 					dividerText: styles.dividerText,
 				}}
+			/>
+
+			<AuthSocialLoginActions
+				className={styles.passkeyActions}
+				disabled={passkeyControlsDisabled}
+				redirectPath={redirectPath || '/channels/@me'}
 			/>
 
 			<AuthLoginPasskeyActions

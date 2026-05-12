@@ -22,6 +22,7 @@ import {observer} from 'mobx-react-lite';
 import {useEffect, useState} from 'react';
 import * as AuthenticationActionCreators from '~/actions/AuthenticationActionCreators';
 import {AuthBottomLink} from '~/components/auth/AuthBottomLink';
+import {AuthLoginDivider} from '~/components/auth/AuthLoginCore/AuthLoginPasskeyActions';
 import sharedStyles from '~/components/auth/AuthPageStyles.module.css';
 import {AuthRegisterFormCore} from '~/components/auth/AuthRegisterFormCore';
 import {AuthSocialLoginActions} from '~/components/auth/AuthSocialLoginActions';
@@ -54,16 +55,15 @@ const RegisterPageContent = observer(function RegisterPageContent() {
 			</h1>
 
 			<div className={sharedStyles.container}>
-				{!socialTicket ? (
-					<AuthSocialLoginActions className={sharedStyles.socialActions} redirectPath={redirectTo} />
-				) : null}
-
 				<AuthRegisterFormCore
 					fields={{
 						showEmail: !socialTicket,
 						showPassword: !socialTicket,
-						showUsernameValidation: true,
-						showBetaCodeHint: true,
+						showDisplayName: true,
+						showUsername: false,
+						showUsernameValidation: false,
+						showBetaCode: false,
+						showBetaCodeHint: false,
 						requireBetaCode: false,
 					}}
 					submitLabel={<Trans>Create account</Trans>}
@@ -78,6 +78,22 @@ const RegisterPageContent = observer(function RegisterPageContent() {
 						) : null
 					}
 				/>
+
+				{!socialTicket ? (
+					<AuthSocialLoginActions
+						className={sharedStyles.socialActionsCompact}
+						redirectPath={redirectTo}
+						leadingContent={
+							<AuthLoginDivider
+								classes={{
+									divider: sharedStyles.divider,
+									dividerLine: sharedStyles.dividerLine,
+									dividerText: sharedStyles.dividerText,
+								}}
+							/>
+						}
+					/>
+				) : null}
 
 				<AuthBottomLink
 					variant="login"
