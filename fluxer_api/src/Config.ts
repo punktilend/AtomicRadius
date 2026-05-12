@@ -400,8 +400,8 @@ function loadConfig() {
 			enabled: optionalBool('EMAIL_ENABLED'),
 			apiKey: optional('SENDGRID_API_KEY'),
 			webhookPublicKey: optional('SENDGRID_WEBHOOK_PUBLIC_KEY'),
-			fromEmail: optional('SENDGRID_FROM_EMAIL') || 'noreply@fluxer.app',
-			fromName: optional('SENDGRID_FROM_NAME') || 'Fluxer',
+			fromEmail: optional('SENDGRID_FROM_EMAIL') || 'noreply@atomicradius.app',
+			fromName: optional('SENDGRID_FROM_NAME') || 'Atomic Radius',
 		},
 
 		sms: {
