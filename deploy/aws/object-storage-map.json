@@ -1,0 +1,31 @@
+{
+  "project": "atomic-radius",
+  "environment": "prod",
+  "buckets": [
+    {
+      "name": "static",
+      "sourceBucketEnv": "B2_STATIC_BUCKET",
+      "targetFoundationOutput": "StaticBucketName"
+    },
+    {
+      "name": "uploads",
+      "sourceBucketEnv": "B2_UPLOADS_BUCKET",
+      "targetFoundationOutput": "UploadsBucketName"
+    },
+    {
+      "name": "reports",
+      "sourceBucketEnv": "B2_REPORTS_BUCKET",
+      "targetFoundationOutput": "ReportsBucketName"
+    },
+    {
+      "name": "harvests",
+      "sourceBucketEnv": "B2_HARVESTS_BUCKET",
+      "targetFoundationOutput": "HarvestsBucketName"
+    },
+    {
+      "name": "downloads",
+      "sourceBucketEnv": "B2_DOWNLOADS_BUCKET",
+      "targetFoundationOutput": "DownloadsBucketName"
+    }
+  ]
+}

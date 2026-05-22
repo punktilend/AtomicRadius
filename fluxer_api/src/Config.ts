@@ -384,9 +384,9 @@ function loadConfig() {
 		},
 
 		s3: {
-			endpoint: required('AWS_S3_ENDPOINT'),
-			accessKeyId: required('AWS_ACCESS_KEY_ID'),
-			secretAccessKey: required('AWS_SECRET_ACCESS_KEY'),
+			endpoint: optional('AWS_S3_ENDPOINT'),
+			accessKeyId: optional('AWS_ACCESS_KEY_ID'),
+			secretAccessKey: optional('AWS_SECRET_ACCESS_KEY'),
 			buckets: {
 				cdn: required('AWS_S3_BUCKET_CDN'),
 				uploads: required('AWS_S3_BUCKET_UPLOADS'),

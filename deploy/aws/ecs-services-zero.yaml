@@ -1,0 +1,188 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius ECS services at desired count zero, ready for later activation.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  ClusterName:
+    Type: String
+    Default: atomic-radius-prod
+  CapacityProviderName:
+    Type: String
+    Default: atomic-radius-prod-ec2
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+  EcsServiceSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  DesiredCount:
+    Type: Number
+    Default: 0
+
+Resources:
+  ApiService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-api"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-api"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  ApiWorkerService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-api-worker"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-api-worker"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  GatewayService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-gateway"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-gateway"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  MediaProxyService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-media-proxy"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-media-proxy"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  AdminService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-admin"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-admin"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  MarketingService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-marketing"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-marketing"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  DocsService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-docs"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-docs"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+  MetricsService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-metrics"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-metrics"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
+Outputs:
+  ApiServiceName:
+    Value: !GetAtt ApiService.Name
+  ApiWorkerServiceName:
+    Value: !GetAtt ApiWorkerService.Name
+  GatewayServiceName:
+    Value: !GetAtt GatewayService.Name
+  MediaProxyServiceName:
+    Value: !GetAtt MediaProxyService.Name
+  AdminServiceName:
+    Value: !GetAtt AdminService.Name
+  MarketingServiceName:
+    Value: !GetAtt MarketingService.Name
+  DocsServiceName:
+    Value: !GetAtt DocsService.Name
+  MetricsServiceName:
+    Value: !GetAtt MetricsService.Name

@@ -1,0 +1,308 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius ALB edge layer. This stack creates billable load balancer resources when applied.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+  AlbSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  CertificateArn:
+    Type: String
+    Default: ""
+    Description: Optional ACM certificate ARN. If set, HTTPS listener is created and HTTP redirects to HTTPS.
+
+Conditions:
+  HasCertificate: !Not [!Equals [!Ref CertificateArn, ""]]
+  HasNoCertificate: !Equals [!Ref CertificateArn, ""]
+
+Resources:
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}"
+      Scheme: internet-facing
+      Type: application
+      IpAddressType: ipv4
+      SecurityGroups:
+        - !Ref AlbSecurityGroupId
+      Subnets: !Ref PublicSubnetIds
+      LoadBalancerAttributes:
+        - Key: routing.http2.enabled
+          Value: "true"
+        - Key: idle_timeout.timeout_seconds
+          Value: "120"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  HttpListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - !If
+          - HasCertificate
+          - Type: redirect
+            RedirectConfig:
+              Protocol: HTTPS
+              Port: "443"
+              StatusCode: HTTP_301
+          - Type: fixed-response
+            FixedResponseConfig:
+              StatusCode: "404"
+              ContentType: text/plain
+              MessageBody: Not Found
+
+  HttpsListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Condition: HasCertificate
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DocsTargetGroup
+
+  ApiTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-api"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /_health
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  GatewayTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-gateway"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /_health
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  MediaProxyTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-media"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /_health
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  AdminTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-admin"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  MarketingTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-marketing"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  DocsTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-docs"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 3000
+      HealthCheckPath: /
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  MetricsTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-metrics"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /_health
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ApiHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 10
+      Conditions:
+        - Field: path-pattern
+          Values: ["/api/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiTargetGroup
+
+  GatewayHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 20
+      Conditions:
+        - Field: path-pattern
+          Values: ["/gateway", "/gateway/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref GatewayTargetGroup
+
+  MediaHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 30
+      Conditions:
+        - Field: path-pattern
+          Values: ["/media/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref MediaProxyTargetGroup
+
+  AdminHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 40
+      Conditions:
+        - Field: path-pattern
+          Values: ["/admin", "/admin/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref AdminTargetGroup
+
+  MarketingHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 50
+      Conditions:
+        - Field: path-pattern
+          Values: ["/marketing", "/marketing/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref MarketingTargetGroup
+
+  MetricsHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !If [HasCertificate, !Ref HttpsListener, !Ref HttpListener]
+      Priority: 60
+      Conditions:
+        - Field: path-pattern
+          Values: ["/metrics", "/metrics/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref MetricsTargetGroup
+
+  DocsCatchAllHttpRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Condition: HasNoCertificate
+    Properties:
+      ListenerArn: !Ref HttpListener
+      Priority: 50000
+      Conditions:
+        - Field: path-pattern
+          Values: ["/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref DocsTargetGroup
+
+Outputs:
+  LoadBalancerArn:
+    Value: !Ref LoadBalancer
+  LoadBalancerDnsName:
+    Value: !GetAtt LoadBalancer.DNSName
+  LoadBalancerHostedZoneId:
+    Value: !GetAtt LoadBalancer.CanonicalHostedZoneID
+  ApiTargetGroupArn:
+    Value: !Ref ApiTargetGroup
+  GatewayTargetGroupArn:
+    Value: !Ref GatewayTargetGroup
+  MediaProxyTargetGroupArn:
+    Value: !Ref MediaProxyTargetGroup
+  AdminTargetGroupArn:
+    Value: !Ref AdminTargetGroup
+  MarketingTargetGroupArn:
+    Value: !Ref MarketingTargetGroup
+  DocsTargetGroupArn:
+    Value: !Ref DocsTargetGroup
+  MetricsTargetGroupArn:
+    Value: !Ref MetricsTargetGroup

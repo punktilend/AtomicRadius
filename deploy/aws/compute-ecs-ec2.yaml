@@ -1,0 +1,179 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius ECS-on-EC2 compute layer.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+  EcsServiceSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  InstanceType:
+    Type: String
+    Default: t3.medium
+  DesiredCapacity:
+    Type: Number
+    Default: 0
+  MinSize:
+    Type: Number
+    Default: 0
+  MaxSize:
+    Type: Number
+    Default: 3
+  EcsOptimizedAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id
+
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${ProjectName}-${EnvironmentName}"
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  EcsInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-${EnvironmentName}-ecs-instance"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+  EcsInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ProjectName}-${EnvironmentName}-ecs-instance"
+      Roles:
+        - !Ref EcsInstanceRole
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub "${ProjectName}-${EnvironmentName}-ecs"
+      LaunchTemplateData:
+        ImageId: !Ref EcsOptimizedAmiId
+        InstanceType: !Ref InstanceType
+        IamInstanceProfile:
+          Arn: !GetAtt EcsInstanceProfile.Arn
+        SecurityGroupIds:
+          - !Ref EcsServiceSecurityGroupId
+        MetadataOptions:
+          HttpEndpoint: enabled
+          HttpTokens: required
+        BlockDeviceMappings:
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: 50
+              VolumeType: gp3
+              Encrypted: true
+              DeleteOnTermination: true
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            set -euo pipefail
+            cat > /etc/ecs/ecs.config <<'EOF'
+            ECS_CLUSTER=${Cluster}
+            ECS_ENABLE_CONTAINER_METADATA=true
+            ECS_ENABLE_TASK_IAM_ROLE=true
+            ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
+            EOF
+            systemctl enable ecs
+            systemctl start --no-block ecs
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: !Sub "${ProjectName}-${EnvironmentName}-ecs"
+              - Key: Project
+                Value: !Ref ProjectName
+              - Key: Environment
+                Value: !Ref EnvironmentName
+          - ResourceType: volume
+            Tags:
+              - Key: Name
+                Value: !Sub "${ProjectName}-${EnvironmentName}-ecs"
+              - Key: Project
+                Value: !Ref ProjectName
+              - Key: Environment
+                Value: !Ref EnvironmentName
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${ProjectName}-${EnvironmentName}-ecs"
+      VPCZoneIdentifier: !Ref SubnetIds
+      MinSize: !Ref MinSize
+      MaxSize: !Ref MaxSize
+      DesiredCapacity: !Ref DesiredCapacity
+      HealthCheckType: EC2
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-ecs"
+          PropagateAtLaunch: true
+        - Key: Project
+          Value: !Ref ProjectName
+          PropagateAtLaunch: true
+        - Key: Environment
+          Value: !Ref EnvironmentName
+          PropagateAtLaunch: true
+
+  CapacityProvider:
+    Type: AWS::ECS::CapacityProvider
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-ec2"
+      AutoScalingGroupProvider:
+        AutoScalingGroupArn: !Ref AutoScalingGroup
+        ManagedDraining: ENABLED
+        ManagedScaling:
+          Status: DISABLED
+          TargetCapacity: 80
+          MinimumScalingStepSize: 1
+          MaximumScalingStepSize: 2
+
+  ClusterCapacityProviderAssociations:
+    Type: AWS::ECS::ClusterCapacityProviderAssociations
+    Properties:
+      Cluster: !Ref Cluster
+      CapacityProviders:
+        - !Ref CapacityProvider
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProvider
+          Weight: 1
+          Base: 0
+
+Outputs:
+  ClusterName:
+    Value: !Ref Cluster
+  ClusterArn:
+    Value: !GetAtt Cluster.Arn
+  AutoScalingGroupName:
+    Value: !Ref AutoScalingGroup
+  CapacityProviderName:
+    Value: !Ref CapacityProvider
+  EcsInstanceRoleArn:
+    Value: !GetAtt EcsInstanceRole.Arn

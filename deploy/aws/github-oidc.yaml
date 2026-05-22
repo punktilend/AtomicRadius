@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: GitHub Actions OIDC deploy role for Atomic Radius AWS deployments.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  GitHubOwner:
+    Type: String
+    Default: punktilend
+  GitHubRepo:
+    Type: String
+    Default: AtomicRadius
+
+Resources:
+  GitHubOidcProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      # AWS ignores this for GitHub's well-known OIDC provider, but CloudFormation requires a value.
+      ThumbprintList:
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+
+  GitHubDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-${EnvironmentName}-github-deploy"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProvider
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub:
+                  - !Sub "repo:${GitHubOwner}/${GitHubRepo}:ref:refs/heads/main"
+                  - !Sub "repo:${GitHubOwner}/${GitHubRepo}:ref:refs/heads/canary"
+                  - !Sub "repo:${GitHubOwner}/${GitHubRepo}:ref:refs/heads/codex/*"
+      Policies:
+        - PolicyName: ecr-publish
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:BatchGetImage
+                  - ecr:CompleteLayerUpload
+                  - ecr:DescribeImages
+                  - ecr:DescribeRepositories
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:InitiateLayerUpload
+                  - ecr:ListImages
+                  - ecr:PutImage
+                  - ecr:UploadLayerPart
+                Resource: !Sub "arn:${AWS::Partition}:ecr:${AWS::Region}:${AWS::AccountId}:repository/atomic-radius-*"
+        - PolicyName: atomic-radius-cloudformation-deploy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:CreateStack
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:DescribeStacks
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:UpdateStack
+                  - cloudformation:ValidateTemplate
+                Resource: !Sub "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/atomic-radius-*/*"
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${ProjectName}-${EnvironmentName}-ecs-task"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${ProjectName}-${EnvironmentName}-ecs-task-execution"
+                  - !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/${ProjectName}-${EnvironmentName}-ecs-instance"
+        - PolicyName: ecs-deploy-readwrite
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecs:CreateService
+                  - ecs:DeleteService
+                  - ecs:DescribeClusters
+                  - ecs:DescribeServices
+                  - ecs:DescribeTaskDefinition
+                  - ecs:ListClusters
+                  - ecs:ListServices
+                  - ecs:RegisterTaskDefinition
+                  - ecs:UpdateService
+                Resource: "*"
+        - PolicyName: read-foundation-state
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - autoscaling:DescribeAutoScalingGroups
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeVpcs
+                  - elasticloadbalancing:DescribeLoadBalancers
+                  - elasticloadbalancing:DescribeListeners
+                  - elasticloadbalancing:DescribeRules
+                  - logs:DescribeLogGroups
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:GetParametersByPath
+                Resource: "*"
+
+Outputs:
+  GitHubDeployRoleArn:
+    Value: !GetAtt GitHubDeployRole.Arn
+  GitHubOidcProviderArn:
+    Value: !Ref GitHubOidcProvider

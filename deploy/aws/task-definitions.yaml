@@ -1,0 +1,398 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius ECS task definitions, without running services.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  ImageTag:
+    Type: String
+    Default: main
+  EcsTaskExecutionRoleArn:
+    Type: String
+  EcsTaskRoleArn:
+    Type: String
+  ConfigPrefix:
+    Type: String
+    Default: /atomic-radius/prod/config
+  SecretPrefix:
+    Type: String
+    Default: /atomic-radius/prod/secrets
+
+Resources:
+  ApiTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-api"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "512"
+      Memory: "1024"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: api
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-api:${ImageTag}"
+          Command: ["npm", "run", "start"]
+          Essential: true
+          MemoryReservation: 384
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: FLUXER_API_PORT
+              Value: "8080"
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+          Secrets:
+            - Name: NODE_ENV
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/NODE_ENV"
+            - Name: FLUXER_API_PUBLIC_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_PUBLIC_ENDPOINT"
+            - Name: FLUXER_API_CLIENT_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_CLIENT_ENDPOINT"
+            - Name: FLUXER_APP_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_APP_ENDPOINT"
+            - Name: FLUXER_GATEWAY_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_GATEWAY_ENDPOINT"
+            - Name: FLUXER_MEDIA_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MEDIA_ENDPOINT"
+            - Name: FLUXER_CDN_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_CDN_ENDPOINT"
+            - Name: FLUXER_MARKETING_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MARKETING_ENDPOINT"
+            - Name: FLUXER_ADMIN_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_ADMIN_ENDPOINT"
+            - Name: FLUXER_INVITE_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_INVITE_ENDPOINT"
+            - Name: FLUXER_GIFT_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_GIFT_ENDPOINT"
+            - Name: AWS_S3_BUCKET_CDN
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_CDN"
+            - Name: AWS_S3_BUCKET_UPLOADS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_UPLOADS"
+            - Name: AWS_S3_BUCKET_REPORTS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_REPORTS"
+            - Name: AWS_S3_BUCKET_HARVESTS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_HARVESTS"
+            - Name: AWS_S3_BUCKET_DOWNLOADS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_DOWNLOADS"
+            - Name: DATABASE_URL
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/database_url"
+            - Name: REDIS_URL
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/redis_url"
+            - Name: CASSANDRA_HOSTS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_HOSTS"
+            - Name: CASSANDRA_KEYSPACE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_KEYSPACE"
+            - Name: CASSANDRA_LOCAL_DC
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_LOCAL_DC"
+            - Name: CASSANDRA_USERNAME
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_USERNAME"
+            - Name: SECRET_KEY_BASE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/secret_key_base"
+            - Name: SUDO_MODE_SECRET
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/sudo_mode_secret"
+            - Name: GATEWAY_RPC_SECRET
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/gateway_rpc_secret"
+            - Name: MEDIA_PROXY_SECRET_KEY
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/media_proxy_secret_key"
+            - Name: CASSANDRA_PASSWORD
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/cassandra_password"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/api"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: api
+
+  ApiWorkerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-api-worker"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "512"
+      Memory: "1024"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: worker
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-api-worker:${ImageTag}"
+          Command: ["npm", "run", "start:worker"]
+          Essential: true
+          MemoryReservation: 384
+          Environment:
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+          Secrets:
+            - Name: NODE_ENV
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/NODE_ENV"
+            - Name: SECRET_KEY_BASE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/secret_key_base"
+            - Name: DATABASE_URL
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/database_url"
+            - Name: REDIS_URL
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/redis_url"
+            - Name: CASSANDRA_HOSTS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_HOSTS"
+            - Name: CASSANDRA_KEYSPACE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_KEYSPACE"
+            - Name: CASSANDRA_LOCAL_DC
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_LOCAL_DC"
+            - Name: CASSANDRA_USERNAME
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/CASSANDRA_USERNAME"
+            - Name: CASSANDRA_PASSWORD
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/cassandra_password"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/api"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: worker
+
+  GatewayTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-gateway"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "512"
+      Memory: "1024"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: gateway
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-gateway:${ImageTag}"
+          Essential: true
+          MemoryReservation: 256
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+            - ContainerPort: 8081
+              Protocol: tcp
+          Environment:
+            - Name: RELEASE_NODE
+              Value: atomic_radius_gateway@gateway
+            - Name: LOGGER_LEVEL
+              Value: info
+            - Name: CLUSTER_NAME
+              Value: atomic-radius-gateway
+          Secrets:
+            - Name: GATEWAY_ADMIN_SECRET
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/gateway_admin_secret"
+            - Name: NODE_COOKIE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/erlang_cookie"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/gateway"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: gateway
+
+  MediaProxyTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-media-proxy"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "512"
+      Memory: "1024"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: media-proxy
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-media-proxy:${ImageTag}"
+          Essential: true
+          MemoryReservation: 512
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: "8080"
+            - Name: AWS_REGION
+              Value: !Ref AWS::Region
+          Secrets:
+            - Name: NODE_ENV
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/NODE_ENV"
+            - Name: AWS_S3_BUCKET_CDN
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_CDN"
+            - Name: AWS_S3_BUCKET_STATIC
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_STATIC"
+            - Name: AWS_S3_BUCKET_UPLOADS
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/AWS_S3_BUCKET_UPLOADS"
+            - Name: MEDIA_PROXY_SECRET_KEY
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/media_proxy_secret_key"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/media-proxy"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: media-proxy
+
+  AdminTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-admin"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: admin
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-admin:${ImageTag}"
+          Essential: true
+          MemoryReservation: 128
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: "8080"
+            - Name: APP_MODE
+              Value: admin
+          Secrets:
+            - Name: FLUXER_API_PUBLIC_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_PUBLIC_ENDPOINT"
+            - Name: FLUXER_MEDIA_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MEDIA_ENDPOINT"
+            - Name: FLUXER_CDN_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_CDN_ENDPOINT"
+            - Name: FLUXER_ADMIN_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_ADMIN_ENDPOINT"
+            - Name: FLUXER_APP_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_APP_ENDPOINT"
+            - Name: FLUXER_PATH_ADMIN
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_PATH_ADMIN"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/admin"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: admin
+
+  MarketingTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-marketing"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: marketing
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-marketing:${ImageTag}"
+          Essential: true
+          MemoryReservation: 128
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: "8080"
+          Secrets:
+            - Name: FLUXER_API_PUBLIC_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_PUBLIC_ENDPOINT"
+            - Name: FLUXER_APP_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_APP_ENDPOINT"
+            - Name: FLUXER_CDN_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_CDN_ENDPOINT"
+            - Name: FLUXER_MARKETING_ENDPOINT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MARKETING_ENDPOINT"
+            - Name: FLUXER_PATH_MARKETING
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_PATH_MARKETING"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/marketing"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: marketing
+
+  DocsTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-docs"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "512"
+      Memory: "1024"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: docs
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-docs:${ImageTag}"
+          Essential: true
+          MemoryReservation: 256
+          PortMappings:
+            - ContainerPort: 3000
+              Protocol: tcp
+          Environment:
+            - Name: NODE_ENV
+              Value: production
+            - Name: PORT
+              Value: "3000"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/docs"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: docs
+
+  MetricsTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-metrics"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: metrics
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-metrics:${ImageTag}"
+          Essential: true
+          MemoryReservation: 128
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: METRICS_PORT
+              Value: "8080"
+          Secrets:
+            - Name: METRICS_MODE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/METRICS_MODE"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/metrics"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: metrics
+
+Outputs:
+  ApiTaskDefinitionArn:
+    Value: !Ref ApiTaskDefinition
+  ApiWorkerTaskDefinitionArn:
+    Value: !Ref ApiWorkerTaskDefinition
+  GatewayTaskDefinitionArn:
+    Value: !Ref GatewayTaskDefinition
+  MediaProxyTaskDefinitionArn:
+    Value: !Ref MediaProxyTaskDefinition
+  AdminTaskDefinitionArn:
+    Value: !Ref AdminTaskDefinition
+  MarketingTaskDefinitionArn:
+    Value: !Ref MarketingTaskDefinition
+  DocsTaskDefinitionArn:
+    Value: !Ref DocsTaskDefinition
+  MetricsTaskDefinitionArn:
+    Value: !Ref MetricsTaskDefinition

@@ -1,0 +1,129 @@
+name: aws build and push
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        required: false
+        default: ""
+        description: Optional git ref to build
+  push:
+    branches:
+      - main
+      - canary
+      - codex/**
+    paths:
+      - fluxer_api/**
+      - fluxer_gateway/**
+      - fluxer_media_proxy/**
+      - fluxer_admin/**
+      - fluxer_marketing/**
+      - fluxer_docs/**
+      - fluxer_metrics/**
+      - .github/workflows/aws-build-push.yaml
+
+concurrency:
+  group: aws-build-push-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ROLE_ARN: arn:aws:iam::817378414866:role/atomic-radius-prod-github-deploy
+  ECR_REGISTRY: 817378414866.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  build:
+    name: Build ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: api
+            context: fluxer_api
+            dockerfile: fluxer_api/Dockerfile
+            repository: atomic-radius-api
+          - service: api-worker
+            context: fluxer_api
+            dockerfile: fluxer_api/Dockerfile
+            repository: atomic-radius-api-worker
+          - service: gateway
+            context: fluxer_gateway
+            dockerfile: fluxer_gateway/Dockerfile
+            repository: atomic-radius-gateway
+          - service: media-proxy
+            context: fluxer_media_proxy
+            dockerfile: fluxer_media_proxy/Dockerfile
+            repository: atomic-radius-media-proxy
+          - service: admin
+            context: fluxer_admin
+            dockerfile: fluxer_admin/Dockerfile
+            repository: atomic-radius-admin
+          - service: marketing
+            context: fluxer_marketing
+            dockerfile: fluxer_marketing/Dockerfile
+            repository: atomic-radius-marketing
+          - service: docs
+            context: fluxer_docs
+            dockerfile: fluxer_docs/Dockerfile
+            repository: atomic-radius-docs
+          - service: metrics
+            context: fluxer_metrics
+            dockerfile: fluxer_metrics/Dockerfile
+            repository: atomic-radius-metrics
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Resolve image tags
+        id: tags
+        shell: bash
+        run: |
+          set -euo pipefail
+          short_sha="${GITHUB_SHA::12}"
+          channel="${GITHUB_REF_NAME//\//-}"
+          image="${ECR_REGISTRY}/${{ matrix.repository }}"
+          {
+            echo "image=${image}"
+            echo "short_sha=${short_sha}"
+            echo "tags<<EOF"
+            echo "${image}:${GITHUB_SHA}"
+            echo "${image}:${short_sha}"
+            echo "${image}:${channel}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha,scope=aws-${{ matrix.repository }}
+          cache-to: type=gha,mode=max,scope=aws-${{ matrix.repository }}
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false

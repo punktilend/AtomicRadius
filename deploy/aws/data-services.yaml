@@ -1,0 +1,149 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius managed data services. This stack creates billable resources when applied.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+  DataSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  PostgresInstanceClass:
+    Type: String
+    Default: db.t4g.micro
+  PostgresAllocatedStorage:
+    Type: Number
+    Default: 20
+  PostgresDatabaseName:
+    Type: String
+    Default: atomicradius
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  PostgresUsername:
+    Type: String
+    Default: atomic_radius
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  ValkeyNodeType:
+    Type: String
+    Default: cache.t4g.micro
+
+Resources:
+  PostgresSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Sub "${ProjectName}-${EnvironmentName} Postgres private subnets"
+      SubnetIds: !Ref PrivateSubnetIds
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-postgres"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  PostgresInstance:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: !Sub "${ProjectName}-${EnvironmentName}-postgres"
+      DBName: !Ref PostgresDatabaseName
+      Engine: postgres
+      DBInstanceClass: !Ref PostgresInstanceClass
+      AllocatedStorage: !Ref PostgresAllocatedStorage
+      StorageType: gp3
+      StorageEncrypted: true
+      MasterUsername: !Ref PostgresUsername
+      ManageMasterUserPassword: true
+      DBSubnetGroupName: !Ref PostgresSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DataSecurityGroupId
+      BackupRetentionPeriod: 7
+      DeletionProtection: true
+      PubliclyAccessible: false
+      MultiAZ: false
+      AutoMinorVersionUpgrade: true
+      CopyTagsToSnapshot: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-postgres"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ValkeyAuthSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub "${ProjectName}/${EnvironmentName}/valkey/auth-token"
+      Description: !Sub "${ProjectName} ${EnvironmentName} Valkey auth token"
+      GenerateSecretString:
+        PasswordLength: 32
+        ExcludePunctuation: true
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ValkeySubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: !Sub "${ProjectName}-${EnvironmentName} Valkey private subnets"
+      SubnetIds: !Ref PrivateSubnetIds
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-valkey"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ValkeyReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupId: !Sub "${ProjectName}-${EnvironmentName}-valkey"
+      ReplicationGroupDescription: !Sub "${ProjectName} ${EnvironmentName} Valkey"
+      Engine: valkey
+      CacheNodeType: !Ref ValkeyNodeType
+      NumCacheClusters: 1
+      CacheSubnetGroupName: !Ref ValkeySubnetGroup
+      SecurityGroupIds:
+        - !Ref DataSecurityGroupId
+      AtRestEncryptionEnabled: true
+      TransitEncryptionEnabled: true
+      AuthToken: !Sub "{{resolve:secretsmanager:${ValkeyAuthSecret}:SecretString}}"
+      AutomaticFailoverEnabled: false
+      AutoMinorVersionUpgrade: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-valkey"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  PostgresEndpointAddress:
+    Value: !GetAtt PostgresInstance.Endpoint.Address
+  PostgresEndpointPort:
+    Value: !GetAtt PostgresInstance.Endpoint.Port
+  PostgresDatabaseName:
+    Value: !Ref PostgresDatabaseName
+  PostgresUsername:
+    Value: !Ref PostgresUsername
+  PostgresMasterUserSecretArn:
+    Value: !GetAtt PostgresInstance.MasterUserSecret.SecretArn
+  ValkeyPrimaryEndpointAddress:
+    Value: !GetAtt ValkeyReplicationGroup.PrimaryEndPoint.Address
+  ValkeyPrimaryEndpointPort:
+    Value: !GetAtt ValkeyReplicationGroup.PrimaryEndPoint.Port
+  ValkeyAuthSecretArn:
+    Value: !Ref ValkeyAuthSecret

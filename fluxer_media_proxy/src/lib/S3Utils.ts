@@ -29,11 +29,14 @@ const MAX_STREAM_BYTES = 500 * 1024 * 1024;
 export const s3Client = new S3Client({
 	endpoint: Config.AWS_S3_ENDPOINT,
 	region: 'us-east-1',
-	forcePathStyle: true,
-	credentials: {
-		accessKeyId: Config.AWS_ACCESS_KEY_ID,
-		secretAccessKey: Config.AWS_SECRET_ACCESS_KEY,
-	},
+	forcePathStyle: Config.AWS_S3_ENDPOINT != null,
+	credentials:
+		Config.AWS_ACCESS_KEY_ID && Config.AWS_SECRET_ACCESS_KEY
+			? {
+					accessKeyId: Config.AWS_ACCESS_KEY_ID,
+					secretAccessKey: Config.AWS_SECRET_ACCESS_KEY,
+				}
+			: undefined,
 	requestChecksumCalculation: 'WHEN_REQUIRED',
 	responseChecksumValidation: 'WHEN_REQUIRED',
 });

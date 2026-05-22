@@ -1,0 +1,42 @@
+name: aws infra validate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - canary
+    paths:
+      - deploy/aws/**
+      - .github/workflows/aws-infra-validate.yaml
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ROLE_ARN: arn:aws:iam::817378414866:role/atomic-radius-prod-github-deploy
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Validate templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          for template in deploy/aws/*.yaml; do
+            echo "Validating ${template}"
+            aws cloudformation validate-template --template-body "file://${template}" >/dev/null
+          done
