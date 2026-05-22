@@ -68,6 +68,10 @@ Resources:
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MARKETING_ENDPOINT"
             - Name: FLUXER_ADMIN_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_ADMIN_ENDPOINT"
+            - Name: FLUXER_PATH_MARKETING
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_PATH_MARKETING"
+            - Name: FLUXER_PATH_ADMIN
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_PATH_ADMIN"
             - Name: FLUXER_INVITE_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_INVITE_ENDPOINT"
             - Name: FLUXER_GIFT_ENDPOINT
@@ -301,16 +305,26 @@ Resources:
             - Name: PORT
               Value: "8080"
           Secrets:
+            - Name: SECRET_KEY_BASE
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/secret_key_base"
+            - Name: GATEWAY_RPC_SECRET
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/gateway_rpc_secret"
             - Name: FLUXER_API_PUBLIC_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_PUBLIC_ENDPOINT"
+            - Name: FLUXER_API_HOST
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_API_HOST"
             - Name: FLUXER_APP_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_APP_ENDPOINT"
             - Name: FLUXER_CDN_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_CDN_ENDPOINT"
             - Name: FLUXER_MARKETING_ENDPOINT
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MARKETING_ENDPOINT"
+            - Name: FLUXER_MARKETING_PORT
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_MARKETING_PORT"
             - Name: FLUXER_PATH_MARKETING
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/FLUXER_PATH_MARKETING"
+            - Name: RELEASE_CHANNEL
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${ConfigPrefix}/RELEASE_CHANNEL"
           LogConfiguration:
             LogDriver: awslogs
             Options:

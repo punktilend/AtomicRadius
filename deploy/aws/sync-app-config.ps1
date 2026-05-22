@@ -80,9 +80,11 @@ $config = @{
   "FLUXER_MARKETING_PORT" = "8080"
   "FLUXER_PATH_GATEWAY" = "/gateway"
   "FLUXER_PATH_ADMIN" = "/admin"
-  "FLUXER_PATH_MARKETING" = "/marketing"
+  "FLUXER_PATH_MARKETING" = "/"
   "FLUXER_API_PUBLIC_ENDPOINT" = $ApiPublicEndpoint
   "FLUXER_API_CLIENT_ENDPOINT" = $ApiClientEndpoint
+  # Marketing can render without API RPC; keep this local until service discovery is added.
+  "FLUXER_API_HOST" = "127.0.0.1:9"
   "FLUXER_APP_ENDPOINT" = $AppEndpoint
   "FLUXER_GATEWAY_ENDPOINT" = $GatewayEndpoint
   "FLUXER_MEDIA_ENDPOINT" = $MediaEndpoint
