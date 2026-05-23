@@ -528,10 +528,21 @@ func (s *Server) handleStaticAsset(w http.ResponseWriter, r *http.Request, filen
 	}
 }
 
+func (s *Server) serveEmbeddedContent(w http.ResponseWriter, r *http.Request, embeddedPath string) bool {
+	data, err := assetsFS.ReadFile(embeddedPath)
+	if err != nil {
+		return false
+	}
+	http.ServeContent(w, r, path.Base(embeddedPath), time.Time{}, bytes.NewReader(data))
+	return true
+}
+
 func (s *Server) handleAssetsProxy(w http.ResponseWriter, r *http.Request) {
 	if cleanedPath := path.Clean(strings.TrimPrefix(r.URL.Path, "/")); cleanedPath != "." && strings.HasPrefix(cleanedPath, "assets/") {
-		if data, err := assetsFS.ReadFile(cleanedPath); err == nil {
-			http.ServeContent(w, r, path.Base(cleanedPath), time.Time{}, bytes.NewReader(data))
+		if s.serveEmbeddedContent(w, r, cleanedPath) {
+			return
+		}
+		if s.serveEmbeddedContent(w, r, path.Join("assets", cleanedPath)) {
 			return
 		}
 	}
@@ -541,6 +552,17 @@ func (s *Server) handleAssetsProxy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.assetsProxy.ServeHTTP(w, r)
+}
+
+func (s *Server) handleWebAsset(w http.ResponseWriter, r *http.Request) {
+	cleanedPath := path.Clean(strings.TrimPrefix(r.URL.Path, "/"))
+	if cleanedPath == "." || !strings.HasPrefix(cleanedPath, "web/") {
+		http.NotFound(w, r)
+		return
+	}
+	if !s.serveEmbeddedContent(w, r, path.Join("assets", cleanedPath)) {
+		http.NotFound(w, r)
+	}
 }
 
 func (s *Server) handleSentryProxy(w http.ResponseWriter, r *http.Request) {
@@ -702,6 +724,9 @@ func (s *Server) dispatch(w http.ResponseWriter, r *http.Request) {
 
 	case r.URL.Path == "/assets" || strings.HasPrefix(r.URL.Path, "/assets/"):
 		s.handleAssetsProxy(w, r)
+		return
+	case r.URL.Path == "/web" || strings.HasPrefix(r.URL.Path, "/web/"):
+		s.handleWebAsset(w, r)
 		return
 
 	case r.URL.Path == "/sw.js":
