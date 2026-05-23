@@ -40,7 +40,7 @@ pub fn render(ctx: Context) -> Element(a) {
           locale.Ja ->
             html.div([attribute.class("mb-2 flex justify-center")], [
               html.span([attribute.class("text-3xl font-bold text-white")], [
-                html.text("Fluxer（フラクサー）"),
+                html.text("Atomic Radius"),
               ]),
             ])
           _ -> element.none()
@@ -56,12 +56,12 @@ pub fn render(ctx: Context) -> Element(a) {
           ),
         ]),
         html.h1([attribute.class("hero")], [
-          html.text(g_(i18n_ctx, "A chat app that puts you first")),
+          html.text(g_(i18n_ctx, "Atomic Radius")),
         ]),
         html.p([attribute.class("lead text-white/90")], [
           html.text(g_(
             i18n_ctx,
-            "Fluxer is an open-source, independent instant messaging and VoIP platform. Built for friends, groups, and communities.",
+            "A self-hosted communications platform for chat, voice, media, and communities.",
           )),
         ]),
         html.div(
@@ -94,7 +94,7 @@ pub fn render(ctx: Context) -> Element(a) {
             html.a(
               [
                 attribute.href(
-                  "https://www.producthunt.com/products/fluxer?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-fluxer",
+                  "https://atomicradius.app",
                 ),
                 attribute.target("_blank"),
                 attribute.attribute("rel", "noopener noreferrer"),
@@ -102,7 +102,7 @@ pub fn render(ctx: Context) -> Element(a) {
               [
                 html.img([
                   attribute.alt(
-                    "Fluxer - Open-source Discord-like instant messaging & VoIP platform | Product Hunt",
+                    "Atomic Radius",
                   ),
                   attribute.attribute("width", "250"),
                   attribute.attribute("height", "54"),
@@ -116,7 +116,7 @@ pub fn render(ctx: Context) -> Element(a) {
             html.a(
               [
                 attribute.href(
-                  "https://www.producthunt.com/products/fluxer?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_campaign=badge-fluxer",
+                  "https://atomicradius.app",
                 ),
                 attribute.target("_blank"),
                 attribute.attribute("rel", "noopener noreferrer"),
@@ -124,7 +124,7 @@ pub fn render(ctx: Context) -> Element(a) {
               [
                 html.img([
                   attribute.alt(
-                    "Fluxer - Open-source Discord-like instant messaging & VoIP platform | Product Hunt Top Post",
+                    "Atomic Radius",
                   ),
                   attribute.attribute("width", "250"),
                   attribute.attribute("height", "54"),
@@ -216,7 +216,7 @@ pub fn render(ctx: Context) -> Element(a) {
                       <> "/marketing/screenshots/desktop-2560w.png?v=4 2560w",
                   ),
                   attribute.attribute("sizes", "(max-width: 768px) 100vw, 75vw"),
-                  attribute.alt("Fluxer desktop interface"),
+                  attribute.alt("Atomic Radius desktop interface"),
                   attribute.class(
                     "aspect-video w-full rounded-lg border-2 border-white/50",
                   ),
@@ -281,7 +281,7 @@ pub fn render(ctx: Context) -> Element(a) {
                       <> "/marketing/screenshots/mobile-768w.png?v=4 768w",
                   ),
                   attribute.attribute("sizes", "(max-width: 768px) 320px, 25vw"),
-                  attribute.alt("Fluxer mobile interface"),
+                  attribute.alt("Atomic Radius mobile interface"),
                   attribute.class(
                     "aspect-[9/19] w-full rounded-3xl border-2 border-white/50",
                   ),

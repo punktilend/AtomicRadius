@@ -17,9 +17,7 @@
 
 import fluxer_marketing/i18n
 import fluxer_marketing/icons
-import fluxer_marketing/number_format
 import fluxer_marketing/web.{type Context, href}
-import gleam/string
 import kielet.{gettext as g_}
 import lustre/attribute
 import lustre/element.{type Element}
@@ -27,24 +25,7 @@ import lustre/element/html
 
 pub fn render(ctx: Context) -> Element(a) {
   let i18n_ctx = i18n.get_context(ctx.i18n_db, ctx.locale)
-  let slots = ctx.visionary_slots
-  let remaining_text = number_format.format_number(slots.remaining)
-  let total_text = number_format.format_number(slots.total)
-
-  let headline = case slots.total {
-    0 ->
-      g_(
-        i18n_ctx,
-        "Lifetime Plutonium + Operator Pass with Visionary — limited slots",
-      )
-    _ ->
-      g_(
-        i18n_ctx,
-        "Only {0} of {1} Visionary lifetime slots left — lifetime Plutonium + Operator Pass",
-      )
-      |> string.replace("{0}", remaining_text)
-      |> string.replace("{1}", total_text)
-  }
+  let headline = g_(i18n_ctx, "Atomic Radius beta is live")
 
   html.div(
     [
@@ -76,7 +57,7 @@ pub fn render(ctx: Context) -> Element(a) {
                   "rounded-lg bg-white px-3 py-1.5 sm:px-4 text-xs sm:text-sm font-semibold text-black hover:bg-gray-100 transition-colors whitespace-nowrap",
                 ),
               ],
-              [html.text(g_(i18n_ctx, "Get Visionary"))],
+              [html.text(g_(i18n_ctx, "Open Atomic Radius"))],
             ),
           ],
         ),

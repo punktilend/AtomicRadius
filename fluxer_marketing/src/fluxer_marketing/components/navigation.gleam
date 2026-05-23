@@ -59,12 +59,17 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                     attribute.class(
                       "flex items-center transition-opacity hover:opacity-80 relative z-10",
                     ),
-                    attribute.attribute("aria-label", "Fluxer home"),
+                    attribute.attribute("aria-label", "Atomic Radius home"),
                   ],
                   [
-                    icons.fluxer_logo_wordmark([
-                      attribute.class("h-8 md:h-9 text-[#4641D9]"),
-                    ]),
+                    html.span(
+                      [
+                        attribute.class(
+                          "text-xl md:text-2xl font-bold text-[#4641D9] whitespace-nowrap",
+                        ),
+                      ],
+                      [html.text("Atomic Radius")],
+                    ),
                   ],
                 ),
                 html.div(
@@ -169,7 +174,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                       "hidden lg:inline-flex whitespace-nowrap rounded-xl bg-[#4641D9] px-5 py-2.5 text-base font-semibold text-white transition-colors hover:bg-opacity-90 shadow-md",
                     ),
                   ],
-                  [html.text(g_(i18n_ctx, "Open Fluxer"))],
+                  [html.text(g_(i18n_ctx, "Open Atomic Radius"))],
                 ),
                 html.label(
                   [
@@ -221,12 +226,17 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                     attribute.class(
                       "flex items-center gap-3 rounded-xl px-2 py-1 hover:bg-gray-50 transition-colors",
                     ),
-                    attribute.attribute("aria-label", "Fluxer home"),
+                    attribute.attribute("aria-label", "Atomic Radius home"),
                   ],
                   [
-                    icons.fluxer_logo_wordmark([
-                      attribute.class("h-7 text-[#4641D9]"),
-                    ]),
+                    html.span(
+                      [
+                        attribute.class(
+                          "text-lg font-bold text-[#4641D9] whitespace-nowrap",
+                        ),
+                      ],
+                      [html.text("Atomic Radius")],
+                    ),
                   ],
                 ),
                 html.label(

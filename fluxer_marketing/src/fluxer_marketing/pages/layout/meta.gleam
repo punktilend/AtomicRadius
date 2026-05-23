@@ -26,15 +26,15 @@ pub type PageMeta {
 
 pub fn default_page_meta() -> PageMeta {
   PageMeta(
-    title: "Fluxer: A chat app that puts you first",
-    description: "Fluxer is an open-source, independent instant messaging and VoIP platform. Built for friends, groups, and communities.",
+    title: "Atomic Radius",
+    description: "Atomic Radius is a self-hosted communications platform for chat, voice, media, and communities.",
     og_type: "website",
   )
 }
 
 pub fn article_page_meta(title: String, description: String) -> PageMeta {
   PageMeta(
-    title: "Fluxer | " <> title,
+    title: "Atomic Radius | " <> title,
     description: description,
     og_type: "article",
   )
@@ -42,8 +42,8 @@ pub fn article_page_meta(title: String, description: String) -> PageMeta {
 
 pub fn format_page_title(base_title: String) -> String {
   case base_title {
-    "Fluxer" -> "Fluxer"
-    _ -> "Fluxer |" <> base_title
+    "Atomic Radius" -> "Atomic Radius"
+    _ -> "Atomic Radius | " <> base_title
   }
 }
 
@@ -91,7 +91,7 @@ pub fn build_meta_tags(ctx: Context, page_meta: PageMeta) -> List(Element(a)) {
     ]),
     html.meta([attribute.name("robots"), attribute.content("index,follow")]),
     html.meta([attribute.name("theme-color"), attribute.content("#4641D9")]),
-    html.meta([attribute.name("author"), attribute.content("Fluxer Team")]),
+    html.meta([attribute.name("author"), attribute.content("Atomic Radius")]),
     html.link([attribute.rel("canonical"), attribute.href(ctx.base_url)]),
   ]
 }
