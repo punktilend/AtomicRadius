@@ -129,6 +129,11 @@ jobs:
         working-directory: fluxer_app
         run: pnpm install --frozen-lockfile
 
+      - name: Compile app translations
+        if: matrix.service == 'app'
+        working-directory: fluxer_app
+        run: pnpm lingui:extract && pnpm lingui:compile --strict
+
       - name: Build app assets
         if: matrix.service == 'app'
         working-directory: fluxer_app
