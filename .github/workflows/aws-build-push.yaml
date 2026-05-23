@@ -149,7 +149,14 @@ jobs:
           export PUBLIC_BUILD_SHA=$(git rev-parse --short HEAD)
           export PUBLIC_BUILD_TIMESTAMP=$(date +%s)
           pnpm wasm:codegen
-          pnpm build
+          pnpm generate:colors
+          pnpm generate:masks
+          pnpm generate:css-types
+          pnpm exec tsc --noEmit
+          pnpm exec lingui compile
+          node -e "require('fs').rmSync('dist',{recursive:true,force:true})"
+          pnpm exec rspack build --mode production
+          pnpm exec tsx scripts/build-sw.mjs
           cat > dist/version.json << EOF
           {
             "sha": "$PUBLIC_BUILD_SHA",
