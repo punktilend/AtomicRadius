@@ -138,9 +138,9 @@ const ConfigSchema = z.object({
 	}),
 
 	s3: z.object({
-		endpoint: z.string(),
-		accessKeyId: z.string(),
-		secretAccessKey: z.string(),
+		endpoint: z.string().optional(),
+		accessKeyId: z.string().optional(),
+		secretAccessKey: z.string().optional(),
 		buckets: z.object({
 			cdn: z.string(),
 			uploads: z.string(),

@@ -61,4 +61,4 @@ EXPOSE 8080
 ENV NODE_ENV=production
 ENV PORT=8080
 
-CMD ["pnpm", "start"]
+CMD ["./node_modules/.bin/tsx", "src/App.ts"]
