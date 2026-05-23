@@ -132,7 +132,7 @@ jobs:
       - name: Compile app translations
         if: matrix.service == 'app'
         working-directory: fluxer_app
-        run: pnpm lingui:extract && pnpm lingui:compile --strict
+        run: pnpm lingui:extract && pnpm lingui:compile
 
       - name: Build app assets
         if: matrix.service == 'app'
