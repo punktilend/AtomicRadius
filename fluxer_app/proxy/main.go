@@ -491,6 +491,9 @@ func (s *Server) handleIndex(w http.ResponseWriter) {
 	}
 
 	w.Header().Set("Content-Security-Policy", s.buildCSP(nonce))
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	indexBytes, err := assetsFS.ReadFile("assets/index.html")
@@ -515,6 +518,11 @@ func (s *Server) handleStaticAsset(w http.ResponseWriter, r *http.Request, filen
 	}
 
 	w.Header().Set("Content-Type", contentType)
+	if filename == "sw.js" || filename == "sw.js.map" || filename == "manifest.json" || filename == "version.json" {
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+	}
 	if _, err := w.Write(data); err != nil {
 		s.errorLog.Printf("Failed to write response for %s: %v", filename, err)
 	}
