@@ -258,6 +258,8 @@ if (!Config.instance.selfHosted) {
 
 const app = new Hono<HonoEnv>({strict: true});
 app.route('/v1', routes);
+app.route('/api', routes);
+app.route('/api/v1', routes);
 app.route('/', routes);
 
 app.onError(AppErrorHandler);
