@@ -142,7 +142,7 @@ jobs:
           PUBLIC_BOOTSTRAP_API_ENDPOINT: https://atomicradius.app/api
           PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: https://atomicradius.app/api
           PUBLIC_API_VERSION: 1
-          PUBLIC_PROJECT_ENV: prod
+          PUBLIC_PROJECT_ENV: stable
           PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
         run: |
           set -euo pipefail

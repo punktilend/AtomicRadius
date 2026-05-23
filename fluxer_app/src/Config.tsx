@@ -36,7 +36,8 @@ const envSchema = v.object({
 	PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: v.optional(v.string()),
 });
 
-const normalizeProjectEnv = (value: unknown): unknown => (value === 'production' ? 'stable' : value);
+const normalizeProjectEnv = (value: unknown): unknown =>
+	value === 'production' || value === 'prod' ? 'stable' : value;
 
 const env = v.parse(envSchema, {
 	PUBLIC_BUILD_SHA: import.meta.env.PUBLIC_BUILD_SHA,
