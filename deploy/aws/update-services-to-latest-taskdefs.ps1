@@ -19,6 +19,7 @@ if ($Region) {
 $families = @(
   "api",
   "api-worker",
+  "app",
   "gateway",
   "media-proxy",
   "admin",

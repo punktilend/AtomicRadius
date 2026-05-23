@@ -22,6 +22,7 @@ if ($LASTEXITCODE -ne 0) {
 $images = @(
   @{ Repository = "atomic-radius-api"; Context = "fluxer_api"; Dockerfile = "fluxer_api/Dockerfile" },
   @{ Repository = "atomic-radius-api-worker"; Context = "fluxer_api"; Dockerfile = "fluxer_api/Dockerfile" },
+  @{ Repository = "atomic-radius-app"; Context = "."; Dockerfile = "fluxer_app/proxy/Dockerfile" },
   @{ Repository = "atomic-radius-gateway"; Context = "fluxer_gateway"; Dockerfile = "fluxer_gateway/Dockerfile" },
   @{ Repository = "atomic-radius-media-proxy"; Context = "fluxer_media_proxy"; Dockerfile = "fluxer_media_proxy/Dockerfile" },
   @{ Repository = "atomic-radius-admin"; Context = "fluxer_admin"; Dockerfile = "fluxer_admin/Dockerfile" },

@@ -35,6 +35,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -520,6 +521,13 @@ func (s *Server) handleStaticAsset(w http.ResponseWriter, r *http.Request, filen
 }
 
 func (s *Server) handleAssetsProxy(w http.ResponseWriter, r *http.Request) {
+	if cleanedPath := path.Clean(strings.TrimPrefix(r.URL.Path, "/")); cleanedPath != "." && strings.HasPrefix(cleanedPath, "assets/") {
+		if data, err := assetsFS.ReadFile(cleanedPath); err == nil {
+			http.ServeContent(w, r, path.Base(cleanedPath), time.Time{}, bytes.NewReader(data))
+			return
+		}
+	}
+
 	if s.assetsProxy == nil {
 		http.Error(w, "Assets proxy not configured", http.StatusInternalServerError)
 		return

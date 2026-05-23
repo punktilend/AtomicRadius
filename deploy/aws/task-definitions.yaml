@@ -160,6 +160,38 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: worker
 
+  AppTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${ProjectName}-${EnvironmentName}-app"
+      RequiresCompatibilities: [EC2, FARGATE]
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ExecutionRoleArn: !Ref EcsTaskExecutionRoleArn
+      TaskRoleArn: !Ref EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: app
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/atomic-radius-app:${ImageTag}"
+          Essential: true
+          MemoryReservation: 128
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: "8080"
+            - Name: RELEASE_CHANNEL
+              Value: prod
+            - Name: FLUXER_METRICS_HOST
+              Value: ""
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/${ProjectName}/${EnvironmentName}/app"
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: app
+
   GatewayTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -398,6 +430,8 @@ Outputs:
     Value: !Ref ApiTaskDefinition
   ApiWorkerTaskDefinitionArn:
     Value: !Ref ApiWorkerTaskDefinition
+  AppTaskDefinitionArn:
+    Value: !Ref AppTaskDefinition
   GatewayTaskDefinitionArn:
     Value: !Ref GatewayTaskDefinition
   MediaProxyTaskDefinitionArn:

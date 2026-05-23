@@ -61,6 +61,24 @@ Resources:
             - !Ref EcsServiceSecurityGroupId
           Subnets: !Ref SubnetIds
 
+  AppService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "${ProjectName}-${EnvironmentName}-app"
+      Cluster: !Ref ClusterName
+      TaskDefinition: !Sub "${ProjectName}-${EnvironmentName}-app"
+      DesiredCount: !Ref DesiredCount
+      EnableExecuteCommand: true
+      CapacityProviderStrategy:
+        - CapacityProvider: !Ref CapacityProviderName
+          Weight: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - !Ref EcsServiceSecurityGroupId
+          Subnets: !Ref SubnetIds
+
   GatewayService:
     Type: AWS::ECS::Service
     Properties:
@@ -174,6 +192,8 @@ Outputs:
     Value: !GetAtt ApiService.Name
   ApiWorkerServiceName:
     Value: !GetAtt ApiWorkerService.Name
+  AppServiceName:
+    Value: !GetAtt AppService.Name
   GatewayServiceName:
     Value: !GetAtt GatewayService.Name
   MediaProxyServiceName:

@@ -12,6 +12,7 @@ COPY fluxer_app/dist/index.html assets/index.html
 COPY fluxer_app/dist/manifest.json assets/manifest.json
 COPY fluxer_app/dist/sw.js* assets/
 COPY fluxer_app/dist/version.json assets/version.json
+COPY fluxer_app/dist/assets assets/assets
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64

@@ -51,6 +51,7 @@ function Get-Output {
 
 $attachments = @(
   @{ Service = "api"; Container = "api"; Port = 8080; TargetGroup = Get-Output "ApiTargetGroupArn" },
+  @{ Service = "app"; Container = "app"; Port = 8080; TargetGroup = Get-Output "AppTargetGroupArn" },
   @{ Service = "gateway"; Container = "gateway"; Port = 8080; TargetGroup = Get-Output "GatewayTargetGroupArn" },
   @{ Service = "media-proxy"; Container = "media-proxy"; Port = 8080; TargetGroup = Get-Output "MediaProxyTargetGroupArn" },
   @{ Service = "admin"; Container = "admin"; Port = 8080; TargetGroup = Get-Output "AdminTargetGroupArn" },

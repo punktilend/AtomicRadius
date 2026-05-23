@@ -31,6 +31,7 @@ Mappings:
     Names:
       Api: atomic-radius-api
       ApiWorker: atomic-radius-api-worker
+      App: atomic-radius-app
       Gateway: atomic-radius-gateway
       MediaProxy: atomic-radius-media-proxy
       Admin: atomic-radius-admin
@@ -391,6 +392,14 @@ Resources:
         ScanOnPush: true
       ImageTagMutability: MUTABLE
 
+  AppRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !FindInMap [ServiceImages, Names, App]
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+
   GatewayRepository:
     Type: AWS::ECR::Repository
     Properties:
@@ -508,6 +517,12 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/${ProjectName}/${EnvironmentName}/api"
+      RetentionInDays: 30
+
+  AppLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/${ProjectName}/${EnvironmentName}/app"
       RetentionInDays: 30
 
   GatewayLogGroup:

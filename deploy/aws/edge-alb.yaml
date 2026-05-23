@@ -62,7 +62,7 @@ Resources:
               Port: "443"
               StatusCode: HTTP_301
           - Type: forward
-            TargetGroupArn: !Ref MarketingTargetGroup
+            TargetGroupArn: !Ref AppTargetGroup
 
   HttpsListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -76,7 +76,7 @@ Resources:
       SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref MarketingTargetGroup
+          TargetGroupArn: !Ref AppTargetGroup
 
   ApiTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -99,6 +99,23 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Name: !Sub "${ProjectName}-${EnvironmentName}-gateway"
+      VpcId: !Ref VpcId
+      TargetType: ip
+      Protocol: HTTP
+      Port: 8080
+      HealthCheckPath: /_health
+      Matcher:
+        HttpCode: "200-399"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  AppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${ProjectName}-${EnvironmentName}-app"
       VpcId: !Ref VpcId
       TargetType: ip
       Protocol: HTTP
@@ -293,6 +310,8 @@ Outputs:
     Value: !Ref ApiTargetGroup
   GatewayTargetGroupArn:
     Value: !Ref GatewayTargetGroup
+  AppTargetGroupArn:
+    Value: !Ref AppTargetGroup
   MediaProxyTargetGroupArn:
     Value: !Ref MediaProxyTargetGroup
   AdminTargetGroupArn:
