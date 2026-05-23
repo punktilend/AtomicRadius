@@ -83,13 +83,13 @@ pub fn render(ctx: Context) -> Element(a) {
             support_card.render(
               ctx,
               "chat-centered-text",
-              g_(i18n_ctx, "Join Fluxer HQ"),
+              g_(i18n_ctx, "Join Atomic Radius"),
               g_(
                 i18n_ctx,
                 "Get updates, see upcoming features, discuss suggestions, and chat with the team.",
               ),
-              g_(i18n_ctx, "Join Fluxer HQ"),
-              "https://fluxer.gg/fluxer-hq",
+              g_(i18n_ctx, "Join Atomic Radius"),
+              ctx.app_endpoint <> "/register",
             ),
             html.div(
               [
@@ -129,7 +129,7 @@ pub fn render(ctx: Context) -> Element(a) {
                       html.a(
                         [
                           attribute.href(
-                            "https://bsky.app/profile/fluxer.app/rss",
+                            "https://atomicradius.app",
                           ),
                           attribute.class(
                             "underline hover:text-gray-900 transition-colors",
@@ -148,14 +148,14 @@ pub fn render(ctx: Context) -> Element(a) {
                   [
                     html.a(
                       [
-                        attribute.href("https://bsky.app/profile/fluxer.app"),
+                        attribute.href("https://atomicradius.app"),
                         attribute.class(
                           "label inline-block rounded-xl bg-[#4641D9] px-8 py-4 text-base md:text-lg text-white transition-colors hover:bg-opacity-90 shadow-md w-full text-center",
                         ),
                         attribute.target("_blank"),
                         attribute.rel("noopener noreferrer"),
                       ],
-                      [html.text(g_(i18n_ctx, "Follow @fluxer.app"))],
+                      [html.text(g_(i18n_ctx, "Follow Atomic Radius"))],
                     ),
                   ],
                 ),
@@ -167,7 +167,7 @@ pub fn render(ctx: Context) -> Element(a) {
               g_(i18n_ctx, "Report bugs"),
               g_(
                 i18n_ctx,
-                "Approved reports grant access to Fluxer Testers, where you can earn points for Plutonium codes and the Bug Hunter badge.",
+                "Approved reports help improve Atomic Radius and keep the platform reliable.",
               ),
               g_(i18n_ctx, "Read the Guide"),
               bug_article_href,
@@ -178,10 +178,10 @@ pub fn render(ctx: Context) -> Element(a) {
               g_(i18n_ctx, "Contribute code"),
               g_(
                 i18n_ctx,
-                "Fluxer is open source (AGPLv3). Contribute directly on GitHub by opening pull requests.",
+                "Atomic Radius is open source (AGPLv3). Contribute directly on GitHub by opening pull requests.",
               ),
               g_(i18n_ctx, "View repository"),
-              "https://github.com/fluxerapp/fluxer",
+              "https://github.com/punktilend/AtomicRadius",
             ),
             support_card.render(
               ctx,

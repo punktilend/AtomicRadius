@@ -48,7 +48,7 @@ pub fn render(ctx: Context) -> Element(a) {
               ),
             ],
             [
-              html.text(g_(i18n_ctx, "Get more with Fluxer Plutonium")),
+              html.text(g_(i18n_ctx, "Get more with Atomic Radius")),
             ],
           ),
           html.div(

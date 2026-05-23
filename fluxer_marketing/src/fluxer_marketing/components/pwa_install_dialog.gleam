@@ -56,7 +56,7 @@ pub fn render_modal(ctx: Context) -> Element(a) {
             [attribute.class("flex items-center justify-between p-6 pb-4")],
             [
               html.h2([attribute.class("text-xl font-bold text-gray-900")], [
-                html.text(g_(i18n_ctx, "Install Fluxer as an app")),
+                html.text(g_(i18n_ctx, "Install Atomic Radius as an app")),
               ]),
               html.button(
                 [
@@ -180,7 +180,7 @@ fn render_android_steps(ctx: Context) -> Element(a) {
           html.span([], [
             html.a(
               [
-                attribute.href("https://web.fluxer.app"),
+                attribute.href("https://atomicradius.app"),
                 attribute.target("_blank"),
                 attribute.rel("noopener noreferrer"),
                 attribute.class("text-blue-600 hover:text-blue-700 underline"),
@@ -203,7 +203,7 @@ fn render_android_steps(ctx: Context) -> Element(a) {
           html.span([attribute.class("text-green-600 font-medium")], [
             html.text(g_(
               i18n_ctx,
-              "Done! You can open Fluxer from your home screen.",
+              "Done! You can open Atomic Radius from your home screen.",
             )),
           ]),
         ),
@@ -226,7 +226,7 @@ fn render_ios_steps(ctx: Context) -> Element(a) {
           html.span([], [
             html.a(
               [
-                attribute.href("https://web.fluxer.app"),
+                attribute.href("https://atomicradius.app"),
                 attribute.target("_blank"),
                 attribute.rel("noopener noreferrer"),
                 attribute.class("text-blue-600 hover:text-blue-700 underline"),
@@ -253,7 +253,7 @@ fn render_ios_steps(ctx: Context) -> Element(a) {
           html.span([attribute.class("text-green-600 font-medium")], [
             html.text(g_(
               i18n_ctx,
-              "Done! You can open Fluxer from your home screen.",
+              "Done! You can open Atomic Radius from your home screen.",
             )),
           ]),
         ),
@@ -276,7 +276,7 @@ fn render_desktop_steps(ctx: Context) -> Element(a) {
           html.span([], [
             html.a(
               [
-                attribute.href("https://web.fluxer.app"),
+                attribute.href("https://atomicradius.app"),
                 attribute.target("_blank"),
                 attribute.rel("noopener noreferrer"),
                 attribute.class("text-blue-600 hover:text-blue-700 underline"),
@@ -305,7 +305,7 @@ fn render_desktop_steps(ctx: Context) -> Element(a) {
           html.span([attribute.class("text-green-600 font-medium")], [
             html.text(g_(
               i18n_ctx,
-              "Done! You can now open Fluxer as if it were a regular program.",
+              "Done! You can now open Atomic Radius as if it were a regular program.",
             )),
           ]),
         ),

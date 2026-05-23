@@ -75,7 +75,7 @@ pub fn render(ctx: Context) -> Element(a) {
                       "inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base md:text-lg font-semibold text-[#4641D9] transition-colors hover:bg-white/90 shadow-lg whitespace-nowrap",
                     ),
                   ],
-                  [html.text(g_(i18n_ctx, "Donate to Fluxer"))],
+                  [html.text(g_(i18n_ctx, "Donate to Atomic Radius"))],
                 ),
               ],
             ),
@@ -85,7 +85,10 @@ pub fn render(ctx: Context) -> Element(a) {
           [attribute.class("grid grid-cols-1 gap-12 md:gap-16 md:grid-cols-4")],
           [
             html.div([attribute.class("md:col-span-1")], [
-              icons.fluxer_logo_wordmark([attribute.class("h-10 md:h-12")]),
+              html.span(
+                [attribute.class("text-2xl font-bold text-white")],
+                [html.text("Atomic Radius")],
+              ),
             ]),
             html.div(
               [
@@ -96,7 +99,7 @@ pub fn render(ctx: Context) -> Element(a) {
               [
                 html.div([], [
                   html.h3([attribute.class("title mb-4 md:mb-6 text-white")], [
-                    html.text(g_(i18n_ctx, "Fluxer")),
+                    html.text(g_(i18n_ctx, "Atomic Radius")),
                   ]),
                   html.ul([attribute.class("space-y-3")], [
                     html.li([], [
@@ -135,7 +138,7 @@ pub fn render(ctx: Context) -> Element(a) {
                     html.li([], [
                       html.a(
                         [
-                          attribute.href("https://github.com/fluxerapp/fluxer"),
+                          attribute.href("https://github.com/punktilend/AtomicRadius"),
                           attribute.class(
                             "body-lg text-white/90 hover:text-white hover:underline transition-colors",
                           ),
@@ -148,7 +151,7 @@ pub fn render(ctx: Context) -> Element(a) {
                         html.a(
                           [
                             attribute.href(
-                              "https://bsky.app/profile/fluxer.app",
+                              "https://atomicradius.app",
                             ),
                             attribute.class(
                               "body-lg text-white/90 hover:text-white hover:underline transition-colors",
@@ -159,7 +162,7 @@ pub fn render(ctx: Context) -> Element(a) {
                         html.a(
                           [
                             attribute.href(
-                              "https://bsky.app/profile/fluxer.app/rss",
+                              "https://atomicradius.app",
                             ),
                             attribute.title("RSS Feed"),
                             attribute.target("_blank"),
@@ -201,7 +204,7 @@ pub fn render(ctx: Context) -> Element(a) {
                     html.li([], [
                       html.a(
                         [
-                          attribute.href("https://docs.fluxer.app"),
+                          href(ctx, "/help"),
                           attribute.class(
                             "body-lg text-white/90 hover:text-white hover:underline transition-colors",
                           ),
@@ -292,23 +295,23 @@ pub fn render(ctx: Context) -> Element(a) {
                     html.li([], [
                       html.a(
                         [
-                          attribute.href("mailto:press@fluxer.app"),
+                          attribute.href("mailto:press@atomicradius.app"),
                           attribute.class(
                             "body-lg text-white/90 hover:text-white hover:underline transition-colors",
                           ),
                         ],
-                        [html.text("press@fluxer.app")],
+                        [html.text("press@atomicradius.app")],
                       ),
                     ]),
                     html.li([], [
                       html.a(
                         [
-                          attribute.href("mailto:support@fluxer.app"),
+                          attribute.href("mailto:support@atomicradius.app"),
                           attribute.class(
                             "body-lg text-white/90 hover:text-white hover:underline transition-colors",
                           ),
                         ],
-                        [html.text("support@fluxer.app")],
+                        [html.text("support@atomicradius.app")],
                       ),
                     ]),
                     html.li([], [
@@ -333,7 +336,7 @@ pub fn render(ctx: Context) -> Element(a) {
             html.p([attribute.class("body-sm text-white/80")], [
               html.text(g_(
                 i18n_ctx,
-                "© Fluxer Platform AB (Swedish limited liability company: 559537-3993)",
+                "© Atomic Radius",
               )),
             ]),
             html.p([attribute.class("body-sm text-white/80")], [

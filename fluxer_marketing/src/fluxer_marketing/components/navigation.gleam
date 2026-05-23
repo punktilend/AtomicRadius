@@ -108,7 +108,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                     ),
                     html.a(
                       [
-                        attribute.href("https://docs.fluxer.app"),
+                        href(ctx, "/help"),
                         attribute.class(
                           "body-lg text-gray-900/90 font-semibold hover:text-gray-900 transition-colors",
                         ),
@@ -130,7 +130,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
               html.div([attribute.class("flex items-center gap-3")], [
                 html.a(
                   [
-                    attribute.href("https://bsky.app/profile/fluxer.app"),
+                    attribute.href("https://atomicradius.app"),
                     attribute.class(
                       "hidden lg:flex items-center p-2 rounded-lg text-[#4641D9] hover:text-[#3d38c7] hover:bg-gray-100 transition-colors",
                     ),
@@ -142,7 +142,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                 ),
                 html.a(
                   [
-                    attribute.href("https://github.com/fluxerapp/fluxer"),
+                    attribute.href("https://github.com/punktilend/AtomicRadius"),
                     attribute.class(
                       "hidden lg:flex items-center p-2 rounded-lg text-[#4641D9] hover:text-[#3d38c7] hover:bg-gray-100 transition-colors",
                     ),
@@ -154,7 +154,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                 ),
                 html.a(
                   [
-                    attribute.href("https://bsky.app/profile/fluxer.app/rss"),
+                    attribute.href("https://atomicradius.app"),
                     attribute.class(
                       "hidden lg:flex items-center p-2 rounded-lg text-[#4641D9] hover:text-[#3d38c7] hover:bg-gray-100 transition-colors",
                     ),
@@ -321,7 +321,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                   html.div([attribute.class("flex flex-col gap-1")], [
                     html.a(
                       [
-                        attribute.href("https://docs.fluxer.app"),
+                        href(ctx, "/help"),
                         attribute.class(
                           "px-2 py-2 text-base font-semibold text-gray-900 hover:bg-gray-100 rounded-lg transition-colors",
                         ),
@@ -447,7 +447,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                   html.div([attribute.class("flex flex-col gap-1")], [
                     html.a(
                       [
-                        attribute.href("https://github.com/fluxerapp/fluxer"),
+                        attribute.href("https://github.com/punktilend/AtomicRadius"),
                         attribute.class(
                           "px-2 py-2 text-base font-semibold text-gray-900 hover:bg-gray-100 rounded-lg transition-colors",
                         ),
@@ -458,7 +458,7 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                     ),
                     html.a(
                       [
-                        attribute.href("https://bsky.app/profile/fluxer.app"),
+                        attribute.href("https://atomicradius.app"),
                         attribute.class(
                           "px-2 py-2 text-base font-semibold text-gray-900 hover:bg-gray-100 rounded-lg transition-colors",
                         ),
@@ -469,12 +469,12 @@ pub fn render(ctx: Context, _req: Request) -> Element(a) {
                     ),
                     html.a(
                       [
-                        attribute.href("mailto:support@fluxer.app"),
+                        attribute.href("mailto:support@atomicradius.app"),
                         attribute.class(
                           "px-2 py-2 text-base font-semibold text-gray-900 hover:bg-gray-100 rounded-lg transition-colors",
                         ),
                       ],
-                      [html.text("support@fluxer.app")],
+                      [html.text("support@atomicradius.app")],
                     ),
                   ]),
                 ]),
