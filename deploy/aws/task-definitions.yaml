@@ -257,9 +257,13 @@ Resources:
               Value: info
             - Name: CLUSTER_NAME
               Value: atomic-radius-gateway
+            - Name: API_HOST
+              Value: atomicradius.app
           Secrets:
             - Name: GATEWAY_ADMIN_SECRET
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/gateway_admin_secret"
+            - Name: GATEWAY_RPC_SECRET
+              ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/gateway_rpc_secret"
             - Name: NODE_COOKIE
               ValueFrom: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SecretPrefix}/erlang_cookie"
           LogConfiguration:
