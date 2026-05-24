@@ -81,7 +81,7 @@ export const UnknownMessage = observer(() => {
 					<div className={styles.unknownMessageWarning}>
 						<WarningCircleIcon size={16} weight="fill" />
 						<span>
-							<Trans>Please update Fluxer to view this message.</Trans>
+							<Trans>Please update Atomic Radius to view this message.</Trans>
 						</span>
 					</div>
 				</div>

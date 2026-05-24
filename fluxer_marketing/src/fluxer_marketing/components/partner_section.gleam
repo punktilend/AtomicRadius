@@ -61,7 +61,7 @@ pub fn render(ctx: Context) -> Element(a) {
                 ),
               ],
               [
-                html.text(g_(i18n_ctx, "Become a Fluxer Partner")),
+                html.text(g_(i18n_ctx, "Become an Atomic Radius Partner")),
               ],
             ),
             html.p([attribute.class("lead mx-auto max-w-3xl text-white/90")], [

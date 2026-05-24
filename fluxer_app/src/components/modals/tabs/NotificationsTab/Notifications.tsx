@@ -111,7 +111,7 @@ export const Notifications: FC<NotificationsProps> = observer(
 						<div>
 							<h3 className={styles.pushHeading}>{t`Push subscriptions for this device`}</h3>
 							<p className={styles.pushDescription}>
-								{t`Fluxer uses push notifications when installed as a mobile PWA. Registering ensures the gateway can reach your device even when the browser is backgrounded.`}
+								{t`Atomic Radius uses push notifications when installed as a mobile PWA. Registering ensures the gateway can reach your device even when the browser is backgrounded.`}
 							</p>
 						</div>
 

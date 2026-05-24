@@ -46,7 +46,7 @@ export const BootstrapErrorScreen: React.FC<BootstrapErrorScreenProps> = ({error
 					<Trans>Failed to Start</Trans>
 				</h1>
 				<p className={styles.errorFallbackDescription}>
-					<Trans>Fluxer failed to start properly. This could be due to corrupted data or a temporary issue.</Trans>
+					<Trans>Atomic Radius failed to start properly. This could be due to corrupted data or a temporary issue.</Trans>
 				</p>
 				{error && (
 					<p className={styles.errorFallbackDescription} style={{fontSize: '0.875rem', opacity: 0.8}}>
@@ -56,8 +56,12 @@ export const BootstrapErrorScreen: React.FC<BootstrapErrorScreenProps> = ({error
 				<p className={styles.errorFallbackDescription}>
 					<Trans>
 						Check our{' '}
-						<a href="https://bsky.app/profile/fluxer.app" target="_blank" rel="noopener noreferrer">
-							Bluesky (@fluxer.app)
+						<a href="https://bsky.app/profile/atomicradius.app" target="_blank" rel="noopener noreferrer">
+							Bluesky (@atomicradius.app)
+						</a>{' '}
+						or{' '}
+						<a href="https://x.com/atomicradiusapp" target="_blank" rel="noopener noreferrer">
+							X (@atomicradiusapp)
 						</a>{' '}
 						for status updates.
 					</Trans>

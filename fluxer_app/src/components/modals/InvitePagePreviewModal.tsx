@@ -34,7 +34,7 @@ import authLayoutStyles from '~/components/layout/AuthLayout.module.css';
 import {Button} from '~/components/uikit/Button/Button';
 import {CardAlignmentControls} from '~/components/uikit/CardAlignmentControls/CardAlignmentControls';
 import {useAuthBackground} from '~/hooks/useAuthBackground';
-import foodPatternUrl from '~/images/i-like-food.svg';
+import foodPatternUrl from '~/images/atomic-pattern.svg';
 import GuildMemberStore from '~/stores/GuildMemberStore';
 import GuildStore from '~/stores/GuildStore';
 import PresenceStore from '~/stores/PresenceStore';

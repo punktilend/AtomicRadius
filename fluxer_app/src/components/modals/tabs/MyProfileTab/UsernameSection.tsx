@@ -46,10 +46,10 @@ export const UsernameSection = observer(({isClaimed, hasPremium, discriminator}:
 
 			<div className={styles.actions}>
 				{!isClaimed ? (
-					<Tooltip text={t(msg`Claim your account to change your FluxerTag`)}>
+					<Tooltip text={t(msg`Claim your account to change your Radius Tag`)}>
 						<div>
 							<Button variant="primary" small disabled>
-								<Trans>Change FluxerTag</Trans>
+								<Trans>Change Radius Tag</Trans>
 							</Button>
 						</div>
 					</Tooltip>
@@ -59,7 +59,7 @@ export const UsernameSection = observer(({isClaimed, hasPremium, discriminator}:
 						small
 						onClick={() => ModalActionCreators.push(modal(() => <FluxerTagChangeModal />))}
 					>
-						<Trans>Change FluxerTag</Trans>
+						<Trans>Change Radius Tag</Trans>
 					</Button>
 				)}
 

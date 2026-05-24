@@ -42,7 +42,7 @@
 	position: relative;
 	min-height: 100svh;
 	width: 100%;
-	background-color: var(--brand-primary);
+	background-color: #0D1F0D;
 }
 
 :global(.auth-page),
@@ -154,28 +154,28 @@
 
 .logoSide {
 	display: flex;
-	width: 33.333333%;
+	flex: 0 0 42%;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 3rem 2rem;
-	border-right: 1px solid var(--background-modifier-accent);
-	background-color: var(--background-secondary);
+	padding: 2.5rem 2rem;
+	border-right: 1px solid rgba(57, 211, 83, 0.2);
+	background-color: #0D1F0D;
 }
 
-.logo {
-	margin-bottom: 1.5rem;
-	height: 8rem;
-	width: 8rem;
-}
-
-.wordmark {
-	height: 2rem;
+.logoMark {
+	display: block;
+	width: min(20rem, 94%);
+	height: auto;
+	object-fit: contain;
+	filter: drop-shadow(0 0 18px rgba(57, 211, 83, 0.22));
+	pointer-events: none;
+	user-select: none;
 }
 
 .formSide {
 	display: flex;
-	width: 66.666667%;
+	flex: 1 1 0;
 	flex-direction: column;
 	justify-content: center;
 	padding: 3rem;

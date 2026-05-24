@@ -29,7 +29,7 @@ import styles from './DesktopDownloadNagbar.module.css';
 
 export const DesktopDownloadNagbar = observer(({isMobile}: {isMobile: boolean}) => {
 	const handleDownload = () => {
-		openExternalUrl('https://fluxer.app/download');
+		openExternalUrl('https://atomicradius.app/download');
 	};
 
 	const handleDismiss = () => {
@@ -46,7 +46,7 @@ export const DesktopDownloadNagbar = observer(({isMobile}: {isMobile: boolean}) 
 		>
 			<NagbarContent
 				isMobile={isMobile}
-				message={<Trans>Get the Fluxer desktop app for system-wide push-to-talk and a few other goodies.</Trans>}
+				message={<Trans>Get the Atomic Radius desktop app for system-wide push-to-talk and a few other goodies.</Trans>}
 				actions={
 					<>
 						{isMobile && (

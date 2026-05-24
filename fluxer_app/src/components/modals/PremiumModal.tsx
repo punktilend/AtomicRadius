@@ -31,7 +31,7 @@ export const PremiumModal = observer(({defaultGiftMode = false}: PremiumModalPro
 
 	return (
 		<Modal.Root size="large">
-			<Modal.Header title={<Trans>Fluxer Plutonium</Trans>} />
+			<Modal.Header title={<Trans>Atomic Radius Plutonium</Trans>} />
 			<Modal.Content>
 				<div className={styles.contentContainer}>
 					<PlutoniumContent defaultGiftMode={modalLogic.defaultGiftMode} />

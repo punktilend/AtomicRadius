@@ -1,7 +1,7 @@
 {
 	"passwordReset": {
-		"subject": "Reset your Fluxer password",
-		"body": "Hello {username},\n\nYou requested to reset your Fluxer password. Please follow the link below to set a new password:\n\n{resetUrl}\n\nIf you did not request this password reset, you can safely ignore this email.\n\nThis link will expire in 1 hour.\n\n- Fluxer Team"
+		"subject": "Reset your Atomic Radius password",
+		"body": "Hello {username},\n\nYou requested to reset your Atomic Radius password. Please follow the link below to set a new password:\n\n{resetUrl}\n\nIf you did not request this password reset, you can safely ignore this email.\n\nThis link will expire in 1 hour.\n\n- Atomic Radius Team"
 	},
 	"emailVerification": {
 		"subject": "Verify your Fluxer email address",

@@ -35,6 +35,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -393,6 +394,8 @@ func (s *Server) buildCSP(nonce string) string {
 			"https://fluxerstatic.com",
 		},
 		"CONNECT": {
+			"https://*.atomicradius.app",
+			"wss://*.atomicradius.app",
 			"https://*.fluxer.app",
 			"wss://*.fluxer.app",
 			"https://*.fluxer.media",
@@ -490,6 +493,9 @@ func (s *Server) handleIndex(w http.ResponseWriter) {
 	}
 
 	w.Header().Set("Content-Security-Policy", s.buildCSP(nonce))
+	w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	indexBytes, err := assetsFS.ReadFile("assets/index.html")
@@ -514,17 +520,51 @@ func (s *Server) handleStaticAsset(w http.ResponseWriter, r *http.Request, filen
 	}
 
 	w.Header().Set("Content-Type", contentType)
+	if filename == "sw.js" || filename == "sw.js.map" || filename == "manifest.json" || filename == "version.json" {
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+	}
 	if _, err := w.Write(data); err != nil {
 		s.errorLog.Printf("Failed to write response for %s: %v", filename, err)
 	}
 }
 
+func (s *Server) serveEmbeddedContent(w http.ResponseWriter, r *http.Request, embeddedPath string) bool {
+	data, err := assetsFS.ReadFile(embeddedPath)
+	if err != nil {
+		return false
+	}
+	http.ServeContent(w, r, path.Base(embeddedPath), time.Time{}, bytes.NewReader(data))
+	return true
+}
+
 func (s *Server) handleAssetsProxy(w http.ResponseWriter, r *http.Request) {
+	if cleanedPath := path.Clean(strings.TrimPrefix(r.URL.Path, "/")); cleanedPath != "." && strings.HasPrefix(cleanedPath, "assets/") {
+		if s.serveEmbeddedContent(w, r, cleanedPath) {
+			return
+		}
+		if s.serveEmbeddedContent(w, r, path.Join("assets", cleanedPath)) {
+			return
+		}
+	}
+
 	if s.assetsProxy == nil {
 		http.Error(w, "Assets proxy not configured", http.StatusInternalServerError)
 		return
 	}
 	s.assetsProxy.ServeHTTP(w, r)
+}
+
+func (s *Server) handleWebAsset(w http.ResponseWriter, r *http.Request) {
+	cleanedPath := path.Clean(strings.TrimPrefix(r.URL.Path, "/"))
+	if cleanedPath == "." || !strings.HasPrefix(cleanedPath, "web/") {
+		http.NotFound(w, r)
+		return
+	}
+	if !s.serveEmbeddedContent(w, r, path.Join("assets", cleanedPath)) {
+		http.NotFound(w, r)
+	}
 }
 
 func (s *Server) handleSentryProxy(w http.ResponseWriter, r *http.Request) {
@@ -686,6 +726,9 @@ func (s *Server) dispatch(w http.ResponseWriter, r *http.Request) {
 
 	case r.URL.Path == "/assets" || strings.HasPrefix(r.URL.Path, "/assets/"):
 		s.handleAssetsProxy(w, r)
+		return
+	case r.URL.Path == "/web" || strings.HasPrefix(r.URL.Path, "/web/"):
+		s.handleWebAsset(w, r)
 		return
 
 	case r.URL.Path == "/sw.js":

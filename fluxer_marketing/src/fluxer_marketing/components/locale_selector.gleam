@@ -99,7 +99,7 @@ pub fn render_modal(ctx: Context, current_path: String) -> Element(a) {
             [
               html.text(g_(
                 i18n_ctx,
-                "All translations are currently LLM-generated with minimal human revision. We'd love to get real people to help us out localizing Fluxer into your language! To do so, shoot an email to i18n@fluxer.app and we'll be happy to accept your contributions.",
+                "All translations are currently LLM-generated with minimal human revision. We'd love to get real people to help us out localizing Atomic Radius into your language! To do so, shoot an email to i18n@atomicradius.app and we'll be happy to accept your contributions.",
               )),
             ],
           ),

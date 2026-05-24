@@ -96,7 +96,7 @@ export const PlutoniumContent: React.FC<{defaultGiftMode?: boolean}> = observer(
 
 	const isClaimed = currentUser?.isClaimed() ?? false;
 	const purchaseDisabled = !isClaimed;
-	const purchaseDisabledTooltip = <Trans>Claim your account to purchase Fluxer Plutonium.</Trans>;
+	const purchaseDisabledTooltip = <Trans>Claim your account to purchase Atomic Radius Plutonium.</Trans>;
 	const handleSelectPlanGuarded = React.useCallback(
 		(plan: 'monthly' | 'yearly' | 'visionary' | 'gift1Month' | 'gift1Year' | 'giftVisionary') => {
 			if (purchaseDisabled) return;
@@ -190,7 +190,7 @@ export const PlutoniumContent: React.FC<{defaultGiftMode?: boolean}> = observer(
 					<CrownIcon className={styles.icon} weight="fill" />
 				</div>
 				<h1 className={styles.title}>
-					<Trans>Fluxer Plutonium</Trans>
+					<Trans>Atomic Radius Plutonium</Trans>
 				</h1>
 				<p className={styles.description}>
 					<Trans>

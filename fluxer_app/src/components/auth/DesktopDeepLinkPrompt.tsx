@@ -86,7 +86,7 @@ export const DesktopDeepLinkPrompt: React.FC<DesktopDeepLinkPromptProps> = ({cod
 		<div className={styles.banner}>
 			<div className={styles.copy}>
 				<p className={styles.title}>
-					<Trans>Open in Fluxer for desktop</Trans>
+					<Trans>Open in Atomic Radius for desktop</Trans>
 				</p>
 				{error ? (
 					<p className={styles.notInstalled}>{error}</p>
@@ -99,7 +99,7 @@ export const DesktopDeepLinkPrompt: React.FC<DesktopDeepLinkPromptProps> = ({cod
 			<Button variant="primary" onClick={handleOpen} className={styles.cta} submitting={isLoading}>
 				<ArrowSquareOutIcon size={18} weight="fill" />
 				<span>
-					<Trans>Open Fluxer</Trans>
+					<Trans>Open Atomic Radius</Trans>
 				</span>
 			</Button>
 		</div>

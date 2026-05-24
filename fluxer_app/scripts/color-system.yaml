@@ -11,8 +11,8 @@ families:
     useSaturationFactor: true
 
   brand:
-    hue: 242
-    saturation: 70
+    hue: 130
+    saturation: 64
     useSaturationFactor: true
 
   link:

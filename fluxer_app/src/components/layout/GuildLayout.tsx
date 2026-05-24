@@ -129,7 +129,7 @@ const StaffOnlyGuildNagbar = observer(({isMobile, guildId}: {isMobile: boolean; 
 			<div className={isMobile ? styles.nagbarContentMobile : styles.nagbarContent}>
 				<p className={styles.nagbarText}>
 					<Trans>
-						<strong>{guild.name}</strong> is currently only accessible to Fluxer staff members
+						<strong>{guild.name}</strong> is currently only accessible to Atomic Radius staff members
 					</Trans>
 				</p>
 				<div className={isMobile ? styles.nagbarActions : styles.nagbarActionsDesktop}>

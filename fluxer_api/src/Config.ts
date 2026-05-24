@@ -138,9 +138,9 @@ const ConfigSchema = z.object({
 	}),
 
 	s3: z.object({
-		endpoint: z.string(),
-		accessKeyId: z.string(),
-		secretAccessKey: z.string(),
+		endpoint: z.string().optional(),
+		accessKeyId: z.string().optional(),
+		secretAccessKey: z.string().optional(),
 		buckets: z.object({
 			cdn: z.string(),
 			uploads: z.string(),
@@ -249,6 +249,17 @@ const ConfigSchema = z.object({
 			rpName: z.string(),
 			rpId: z.string(),
 			allowedOrigins: z.array(z.string()),
+		}),
+		social: z.object({
+			enabled: z.boolean(),
+			google: z.object({
+				clientId: z.string().optional(),
+				clientSecret: z.string().optional(),
+			}),
+			apple: z.object({
+				clientId: z.string().optional(),
+				clientSecret: z.string().optional(),
+			}),
 		}),
 	}),
 
@@ -373,9 +384,9 @@ function loadConfig() {
 		},
 
 		s3: {
-			endpoint: required('AWS_S3_ENDPOINT'),
-			accessKeyId: required('AWS_ACCESS_KEY_ID'),
-			secretAccessKey: required('AWS_SECRET_ACCESS_KEY'),
+			endpoint: optional('AWS_S3_ENDPOINT'),
+			accessKeyId: optional('AWS_ACCESS_KEY_ID'),
+			secretAccessKey: optional('AWS_SECRET_ACCESS_KEY'),
 			buckets: {
 				cdn: required('AWS_S3_BUCKET_CDN'),
 				uploads: required('AWS_S3_BUCKET_UPLOADS'),
@@ -389,8 +400,8 @@ function loadConfig() {
 			enabled: optionalBool('EMAIL_ENABLED'),
 			apiKey: optional('SENDGRID_API_KEY'),
 			webhookPublicKey: optional('SENDGRID_WEBHOOK_PUBLIC_KEY'),
-			fromEmail: optional('SENDGRID_FROM_EMAIL') || 'noreply@fluxer.app',
-			fromName: optional('SENDGRID_FROM_NAME') || 'Fluxer',
+			fromEmail: optional('SENDGRID_FROM_EMAIL') || 'noreply@atomicradius.app',
+			fromName: optional('SENDGRID_FROM_NAME') || 'Atomic Radius',
 		},
 
 		sms: {
@@ -486,6 +497,17 @@ function loadConfig() {
 				rpName: optional('PASSKEY_RP_NAME') || 'Fluxer',
 				rpId: optional('PASSKEY_RP_ID') || extractHostname(webAppEndpoint),
 				allowedOrigins: passkeyAllowedOrigins,
+			},
+			social: {
+				enabled: optionalBool('SOCIAL_AUTH_ENABLED'),
+				google: {
+					clientId: optional('GOOGLE_OAUTH_CLIENT_ID'),
+					clientSecret: optional('GOOGLE_OAUTH_CLIENT_SECRET'),
+				},
+				apple: {
+					clientId: optional('APPLE_OAUTH_CLIENT_ID'),
+					clientSecret: optional('APPLE_OAUTH_CLIENT_SECRET'),
+				},
 			},
 		},
 

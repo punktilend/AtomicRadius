@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius public DNS hosted zone. This stack creates billable Route 53 resources when applied.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  DomainName:
+    Type: String
+    Default: atomicradius.app
+
+Resources:
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneConfig:
+        Comment: !Sub "${ProjectName}-${EnvironmentName} public hosted zone"
+      HostedZoneTags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  HostedZoneId:
+    Value: !Ref HostedZone
+  HostedZoneName:
+    Value: !Ref DomainName
+  NameServers:
+    Value: !Join [",", !GetAtt HostedZone.NameServers]

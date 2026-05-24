@@ -116,7 +116,7 @@ const ExpressionPacksTab: React.FC = observer(() => {
 				<StatusSlate
 					Icon={StickerIcon}
 					title={<Trans>Expression Packs are a Plutonium feature</Trans>}
-					description={<Trans>Create and share custom emoji and sticker packs with Fluxer Plutonium.</Trans>}
+					description={<Trans>Create and share custom emoji and sticker packs with Atomic Radius Plutonium.</Trans>}
 					actions={[
 						{
 							text: <Trans>Learn about Plutonium</Trans>,

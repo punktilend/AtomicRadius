@@ -28,7 +28,7 @@ export const ScreenRecordingPermissionDeniedModal = observer(() => {
 	return (
 		<ConfirmModal
 			title={t`Screen Recording Permission Required`}
-			description={t`Fluxer needs access to screen recording. Open System Settings → Privacy & Security → Screen Recording, allow Fluxer, and then try again.`}
+			description={t`Atomic Radius needs access to screen recording. Open System Settings → Privacy & Security → Screen Recording, allow Atomic Radius, and then try again.`}
 			primaryText={t`Open Settings`}
 			primaryVariant="primary"
 			onPrimary={() => openNativePermissionSettings('screen')}

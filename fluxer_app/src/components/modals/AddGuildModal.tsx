@@ -355,7 +355,7 @@ const GuildCreateForm = observer(() => {
 					<p className={styles.guidelines}>
 						<Trans>
 							By creating a community, you agree to follow and uphold the{' '}
-							<ExternalLink href={Routes.guidelines()}>Fluxer Community Guidelines</ExternalLink>.
+							<ExternalLink href={Routes.guidelines()}>Atomic Radius Community Guidelines</ExternalLink>.
 						</Trans>
 					</p>
 				</div>

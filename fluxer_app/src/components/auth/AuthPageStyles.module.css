@@ -214,6 +214,28 @@
 	gap: 1.25rem;
 }
 
+.notice {
+	padding: 0.75rem 1rem;
+	border: 1px solid var(--background-modifier-accent);
+	border-radius: 8px;
+	background: var(--background-secondary);
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+}
+
+.socialActions {
+	margin-top: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.socialActionsCompact {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
 .loginForm {
 	margin-top: 2rem;
 	display: flex;

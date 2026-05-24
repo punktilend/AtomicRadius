@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Small atom icon repeated as a subtle background tile -->
+  <!-- Nucleus -->
+  <circle cx="60" cy="60" r="5" fill="currentColor"/>
+  <!-- Orbit 1 -->
+  <ellipse cx="60" cy="60" rx="36" ry="14" fill="none" stroke="currentColor" stroke-width="2"/>
+  <!-- Orbit 2 (60deg) -->
+  <ellipse cx="60" cy="60" rx="36" ry="14" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(60 60 60)"/>
+  <!-- Orbit 3 (120deg) -->
+  <ellipse cx="60" cy="60" rx="36" ry="14" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(120 60 60)"/>
+  <!-- Electrons -->
+  <circle cx="24" cy="60" r="3" fill="currentColor"/>
+  <circle cx="78" cy="38" r="3" fill="currentColor"/>
+  <circle cx="78" cy="82" r="3" fill="currentColor"/>
+</svg>

@@ -1,0 +1,117 @@
+name: aws promote task definitions
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        type: string
+        required: true
+        default: main
+        description: ECR image tag to register in ECS task definitions
+      update_services:
+        type: boolean
+        required: true
+        default: true
+        description: Point ECS services at the new task definition revisions
+      skip_runtime_check:
+        type: boolean
+        required: true
+        default: false
+        description: Allow registration before data and Scylla SSM parameters exist
+
+concurrency:
+  group: aws-promote-taskdefs-${{ inputs.image_tag }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ROLE_ARN: arn:aws:iam::817378414866:role/atomic-radius-prod-github-deploy
+  PROJECT_NAME: atomic-radius
+  ENVIRONMENT_NAME: prod
+  FOUNDATION_STACK: atomic-radius-foundation
+  TASK_STACK: atomic-radius-task-definitions
+  ECS_CLUSTER: atomic-radius-prod
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Resolve role outputs
+        id: foundation
+        shell: bash
+        run: |
+          set -euo pipefail
+          outputs="$(aws cloudformation describe-stacks \
+            --stack-name "${FOUNDATION_STACK}" \
+            --query 'Stacks[0].Outputs' \
+            --output json)"
+          task_execution_role="$(jq -r '.[] | select(.OutputKey=="EcsTaskExecutionRoleArn") | .OutputValue' <<< "${outputs}")"
+          task_role="$(jq -r '.[] | select(.OutputKey=="EcsTaskRoleArn") | .OutputValue' <<< "${outputs}")"
+          {
+            echo "task_execution_role=${task_execution_role}"
+            echo "task_role=${task_role}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Validate template
+        run: aws cloudformation validate-template --template-body file://deploy/aws/task-definitions.yaml >/dev/null
+
+      - name: Check runtime SSM parameters
+        if: ${{ !inputs.skip_runtime_check }}
+        shell: pwsh
+        run: ./deploy/aws/check-runtime-ready.ps1 -Region "${env:AWS_REGION}"
+
+      - name: Register task definitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws cloudformation deploy \
+            --stack-name "${TASK_STACK}" \
+            --template-file deploy/aws/task-definitions.yaml \
+            --parameter-overrides \
+              ProjectName="${PROJECT_NAME}" \
+              EnvironmentName="${ENVIRONMENT_NAME}" \
+              ImageTag="${{ inputs.image_tag }}" \
+              EcsTaskExecutionRoleArn="${{ steps.foundation.outputs.task_execution_role }}" \
+              EcsTaskRoleArn="${{ steps.foundation.outputs.task_role }}"
+
+      - name: Update zero-count services
+        if: ${{ inputs.update_services }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          services=(api api-worker gateway media-proxy admin marketing docs metrics)
+          for service in "${services[@]}"; do
+            family="${PROJECT_NAME}-${ENVIRONMENT_NAME}-${service}"
+            service_name="${family}"
+            task_definition="$(aws ecs list-task-definitions \
+              --family-prefix "${family}" \
+              --status ACTIVE \
+              --sort DESC \
+              --max-items 1 \
+              --query 'taskDefinitionArns[0]' \
+              --output text)"
+            if [[ -z "${task_definition}" || "${task_definition}" == "None" ]]; then
+              echo "::error::No active task definition found for ${family}"
+              exit 1
+            fi
+            aws ecs update-service \
+              --cluster "${ECS_CLUSTER}" \
+              --service "${service_name}" \
+              --task-definition "${task_definition}" \
+              --query 'service.{serviceName:serviceName,taskDefinition:taskDefinition,desiredCount:desiredCount,runningCount:runningCount}' \
+              --output table
+          done

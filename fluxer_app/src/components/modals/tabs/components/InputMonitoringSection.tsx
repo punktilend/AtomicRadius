@@ -48,7 +48,7 @@ export const InputMonitoringSection: React.FC = observer(() => {
 			await KeybindManager.reapplyGlobalShortcuts();
 		} else if (result === 'denied') {
 			await openNativePermissionSettings('input-monitoring');
-			ToastActionCreators.error(t`Please enable Fluxer in System Settings → Privacy & Security → Input Monitoring.`);
+			ToastActionCreators.error(t`Please enable Atomic Radius in System Settings → Privacy & Security → Input Monitoring.`);
 		}
 	};
 
@@ -62,13 +62,13 @@ export const InputMonitoringSection: React.FC = observer(() => {
 				</div>
 				<p className={styles.permissionDescription}>
 					<Trans>
-						Fluxer needs Input Monitoring permission to keep push-to-talk and global shortcuts working while the window
+						Atomic Radius needs Input Monitoring permission to keep push-to-talk and global shortcuts working while the window
 						is in the background.
 					</Trans>
 				</p>
 				{status === 'denied' ? (
 					<p className={styles.permissionHelp}>
-						<Trans>Click "Open Settings" to open System Settings, then enable Fluxer in Input Monitoring.</Trans>
+						<Trans>Click "Open Settings" to open System Settings, then enable Atomic Radius in Input Monitoring.</Trans>
 					</p>
 				) : null}
 			</div>

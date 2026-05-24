@@ -70,7 +70,7 @@ export const DisplayTabContent: React.FC = observer(() => {
 							onChange={(value) => UserSettingsActionCreators.update({inlineEmbedMedia: value})}
 						/>
 						<SwitchGroupItem
-							label={t(msg`When uploaded directly to Fluxer`)}
+							label={t(msg`When uploaded directly to Atomic Radius`)}
 							value={userSettings.inlineAttachmentMedia}
 							onChange={(value) => UserSettingsActionCreators.update({inlineAttachmentMedia: value})}
 						/>

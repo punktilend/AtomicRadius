@@ -166,7 +166,16 @@ class RuntimeConfigStore {
 
 			const bootstrapEndpoint = this.apiEndpoint || Config.PUBLIC_BOOTSTRAP_API_ENDPOINT;
 
-			await this.connectToEndpoint(bootstrapEndpoint);
+			try {
+				await this.connectToEndpoint(bootstrapEndpoint);
+			} catch (error) {
+				if (bootstrapEndpoint === Config.PUBLIC_BOOTSTRAP_API_ENDPOINT) {
+					throw error;
+				}
+
+				console.warn('Failed to initialize persisted runtime config, falling back to default endpoint:', error);
+				await this.connectToEndpoint(Config.PUBLIC_BOOTSTRAP_API_ENDPOINT);
+			}
 
 			runInAction(() => {
 				this._initState = 'ready';

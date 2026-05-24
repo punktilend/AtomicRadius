@@ -94,12 +94,12 @@ export const FluxerTagChangeModal = observer(() => {
 					ModalActionCreators.push(
 						modal(() => (
 							<ConfirmModal
-								title={t`FluxerTag already taken`}
+								title={t`Radius Tag already taken`}
 								description={
 									<div className={styles.confirmDescription}>
 										<p>
 											<Trans>
-												The FluxerTag <strong>{fluxerTag}</strong> is already taken. Continuing will reroll your
+												The Radius Tag <strong>{fluxerTag}</strong> is already taken. Continuing will reroll your
 												discriminator automatically.
 											</Trans>
 										</p>
@@ -136,7 +136,7 @@ export const FluxerTagChangeModal = observer(() => {
 				skipAvailabilityCheckRef.current = false;
 			}
 			ModalActionCreators.pop();
-			ToastActionCreators.createToast({type: 'success', children: t`FluxerTag updated`});
+			ToastActionCreators.createToast({type: 'success', children: t`Radius Tag updated`});
 		},
 		[hasPremium, user.username, user.discriminator],
 	);
@@ -150,8 +150,8 @@ export const FluxerTagChangeModal = observer(() => {
 
 	return (
 		<Modal.Root size="small" centered initialFocusRef={usernameRef}>
-			<Form form={form} onSubmit={handleSubmit} aria-label={t`Change FluxerTag form`}>
-				<Modal.Header title={t`Change your FluxerTag`} />
+			<Form form={form} onSubmit={handleSubmit} aria-label={t`Change Radius Tag form`}>
+				<Modal.Header title={t`Change your Radius Tag`} />
 				<Modal.Content className={confirmStyles.content}>
 					<p className={clsx(styles.description, confirmStyles.descriptionText)}>
 						{hasPremium ? (
@@ -167,7 +167,7 @@ export const FluxerTagChangeModal = observer(() => {
 						)}
 					</p>
 					<div className={styles.fluxerTagContainer}>
-						<span className={styles.fluxerTagLabel}>{t`FluxerTag`}</span>
+						<span className={styles.fluxerTagLabel}>{t`Radius Tag`}</span>
 						<div className={styles.fluxerTagInputRow}>
 							<div className={styles.usernameInput}>
 								<Controller

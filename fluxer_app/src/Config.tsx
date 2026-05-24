@@ -36,11 +36,14 @@ const envSchema = v.object({
 	PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: v.optional(v.string()),
 });
 
+const normalizeProjectEnv = (value: unknown): unknown =>
+	value === 'production' || value === 'prod' ? 'stable' : value;
+
 const env = v.parse(envSchema, {
 	PUBLIC_BUILD_SHA: import.meta.env.PUBLIC_BUILD_SHA,
 	PUBLIC_BUILD_NUMBER: import.meta.env.PUBLIC_BUILD_NUMBER,
 	PUBLIC_BUILD_TIMESTAMP: import.meta.env.PUBLIC_BUILD_TIMESTAMP,
-	PUBLIC_PROJECT_ENV: import.meta.env.PUBLIC_PROJECT_ENV,
+	PUBLIC_PROJECT_ENV: normalizeProjectEnv(import.meta.env.PUBLIC_PROJECT_ENV),
 	PUBLIC_SENTRY_DSN: import.meta.env.PUBLIC_SENTRY_DSN,
 	PUBLIC_SENTRY_PROJECT_ID: import.meta.env.PUBLIC_SENTRY_PROJECT_ID,
 	PUBLIC_SENTRY_PUBLIC_KEY: import.meta.env.PUBLIC_SENTRY_PUBLIC_KEY,

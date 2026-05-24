@@ -53,7 +53,7 @@ interface AutoLaunchConfig {
 
 function getAutoLaunchConfig(): AutoLaunchConfig {
 	const isCanary = BUILD_CHANNEL === 'canary';
-	const appName = isCanary ? 'Fluxer Canary' : 'Fluxer';
+	const appName = isCanary ? 'Atomic Radius Canary' : 'Atomic Radius';
 
 	return {
 		name: appName,

@@ -48,7 +48,7 @@ export const PremiumOnboardingNagbar = observer(({isMobile}: {isMobile: boolean}
 			<NagbarContent
 				isMobile={isMobile}
 				message={
-					<Trans>Welcome to Fluxer Plutonium! Explore your premium features and manage your subscription.</Trans>
+					<Trans>Welcome to Atomic Radius Plutonium! Explore your premium features and manage your subscription.</Trans>
 				}
 				actions={
 					<>

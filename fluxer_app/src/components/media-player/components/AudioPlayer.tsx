@@ -53,12 +53,10 @@ export function AudioPlayer({
 	const {t} = useLingui();
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const [hasStarted, setHasStarted] = useState(autoPlay);
-
 	const [volume, setVolumeState] = useState(AudioVolumeStore.volume);
 	const [isMuted, setIsMutedState] = useState(AudioVolumeStore.isMuted);
 
-	const {mediaRef, state, play, toggle, seekRelative, setPlaybackRate} = useMediaPlayer({
+	const {mediaRef, state, toggle, seekRelative, setPlaybackRate} = useMediaPlayer({
 		autoPlay,
 		persistVolume: false,
 		persistPlaybackRate: true,
@@ -93,29 +91,13 @@ export function AudioPlayer({
 		AudioVolumeStore.toggleMute();
 	}, []);
 
-	const hasAutoPlayedRef = useRef(autoPlay);
-	useEffect(() => {
-		if (hasStarted && !hasAutoPlayedRef.current) {
-			hasAutoPlayedRef.current = true;
-			const timer = setTimeout(() => {
-				play();
-			}, 0);
-			return () => clearTimeout(timer);
-		}
-		return undefined;
-	}, [hasStarted, play]);
-
 	const handlePlayClick = useCallback(
 		(e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
-			if (!hasStarted) {
-				setHasStarted(true);
-			} else {
-				toggle();
-			}
+			toggle();
 		},
-		[hasStarted, toggle],
+		[toggle],
 	);
 
 	const handleSeekBackward = useCallback(
@@ -149,7 +131,7 @@ export function AudioPlayer({
 	return (
 		<div ref={containerRef} className={clsx(styles.container, isMobile && styles.mobile, className)}>
 			{/* biome-ignore lint/a11y/useMediaCaption: Audio player doesn't require captions */}
-			<audio ref={mediaRef as React.RefObject<HTMLAudioElement>} src={hasStarted ? src : undefined} preload="none" />
+			<audio ref={mediaRef as React.RefObject<HTMLAudioElement>} src={src} preload="none" />
 
 			{title && <h3 className={styles.fileName}>{title}</h3>}
 

@@ -95,7 +95,7 @@ const AuthSession: React.FC<AuthSessionProps> = observer(
 			: {};
 
 		const platformLabel =
-			authSession.clientPlatform === 'Fluxer Desktop' ? t`Fluxer Desktop` : authSession.clientPlatform;
+			authSession.clientPlatform === 'Fluxer Desktop' ? t`Atomic Radius Desktop` : authSession.clientPlatform;
 
 		const hasLocation = Boolean(authSession.clientLocation);
 		const locationRowVisible = hasLocation || !isCurrent;

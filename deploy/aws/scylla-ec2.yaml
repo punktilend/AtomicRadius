@@ -1,0 +1,205 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius single-node ScyllaDB layer. This stack creates billable EC2/EBS resources when applied.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PrivateSubnetId:
+    Type: AWS::EC2::Subnet::Id
+  DataSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  InstanceType:
+    Type: String
+    Default: t3.large
+  RootVolumeSize:
+    Type: Number
+    Default: 30
+  DataVolumeSize:
+    Type: Number
+    Default: 100
+  KeyspaceName:
+    Type: String
+    Default: atomic_radius
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  LocalDatacenter:
+    Type: String
+    Default: dc1
+  ScyllaUsername:
+    Type: String
+    Default: atomic_radius
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  LatestAl2023AmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+
+Resources:
+  ScyllaPassword:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub "${ProjectName}/${EnvironmentName}/scylla/password"
+      Description: !Sub "${ProjectName} ${EnvironmentName} Scylla application password"
+      GenerateSecretString:
+        PasswordLength: 40
+        ExcludeCharacters: "\"'@/\\ "
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ScyllaInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-${EnvironmentName}-scylla-instance"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: read-scylla-bootstrap-secret
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref ScyllaPassword
+
+  ScyllaInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ProjectName}-${EnvironmentName}-scylla-instance"
+      Roles:
+        - !Ref ScyllaInstanceRole
+
+  ScyllaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Atomic Radius ScyllaDB private access.
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 9042
+          ToPort: 9042
+          SourceSecurityGroupId: !Ref DataSecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-scylla"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ScyllaInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAl2023AmiId
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref ScyllaInstanceProfile
+      SubnetId: !Ref PrivateSubnetId
+      SecurityGroupIds:
+        - !Ref DataSecurityGroupId
+        - !Ref ScyllaSecurityGroup
+      SourceDestCheck: true
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref RootVolumeSize
+            VolumeType: gp3
+            Encrypted: true
+            DeleteOnTermination: true
+        - DeviceName: /dev/xvdb
+          Ebs:
+            VolumeSize: !Ref DataVolumeSize
+            VolumeType: gp3
+            Encrypted: true
+            DeleteOnTermination: false
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpTokens: required
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -euo pipefail
+
+          dnf update -y
+          dnf install -y docker jq awscli
+          systemctl enable --now docker
+
+          mkdir -p /var/lib/scylla
+          if ! file -s /dev/xvdb | grep -q filesystem; then
+            mkfs.xfs -f /dev/xvdb
+          fi
+          grep -q '/var/lib/scylla' /etc/fstab || echo '/dev/xvdb /var/lib/scylla xfs defaults,nofail 0 2' >> /etc/fstab
+          mount -a
+
+          password="$(aws secretsmanager get-secret-value --region ${AWS::Region} --secret-id ${ScyllaPassword} --query SecretString --output text)"
+
+          docker pull scylladb/scylla:5.4
+          docker rm -f scylla >/dev/null 2>&1 || true
+          docker run -d \
+            --name scylla \
+            --restart unless-stopped \
+            --network host \
+            -v /var/lib/scylla:/var/lib/scylla \
+            scylladb/scylla:5.4 \
+            --smp 1 \
+            --memory 4G \
+            --overprovisioned 1 \
+            --developer-mode 1 \
+            --api-address 127.0.0.1 \
+            --listen-address 0.0.0.0 \
+            --rpc-address 0.0.0.0 \
+            --broadcast-address $(hostname -I | awk '{print $1}') \
+            --broadcast-rpc-address $(hostname -I | awk '{print $1}')
+
+          for i in $(seq 1 60); do
+            if docker exec scylla cqlsh -e "describe cluster" >/dev/null 2>&1; then
+              break
+            fi
+            sleep 10
+          done
+
+          docker exec scylla cqlsh -e "CREATE KEYSPACE IF NOT EXISTS ${KeyspaceName} WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};"
+          docker exec scylla cqlsh -e "CREATE ROLE IF NOT EXISTS ${ScyllaUsername} WITH PASSWORD = '$password' AND LOGIN = true;"
+          docker exec scylla cqlsh -e "GRANT ALL PERMISSIONS ON KEYSPACE ${KeyspaceName} TO ${ScyllaUsername};"
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnvironmentName}-scylla"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  ScyllaInstanceId:
+    Value: !Ref ScyllaInstance
+  ScyllaPrivateIp:
+    Value: !GetAtt ScyllaInstance.PrivateIp
+  ScyllaSecurityGroupId:
+    Value: !Ref ScyllaSecurityGroup
+  CassandraHosts:
+    Value: !GetAtt ScyllaInstance.PrivateIp
+  CassandraPort:
+    Value: "9042"
+  CassandraKeyspace:
+    Value: !Ref KeyspaceName
+  CassandraLocalDatacenter:
+    Value: !Ref LocalDatacenter
+  CassandraUsername:
+    Value: !Ref ScyllaUsername
+  CassandraPasswordSecretArn:
+    Value: !Ref ScyllaPassword

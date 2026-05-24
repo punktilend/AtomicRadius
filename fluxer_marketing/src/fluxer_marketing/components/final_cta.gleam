@@ -77,7 +77,7 @@ pub fn render(ctx: Context) -> Element(a) {
                     "label inline-block rounded-xl bg-white px-10 py-5 md:px-12 md:py-6 text-lg md:text-xl text-[#4641D9] transition-colors hover:bg-opacity-90 shadow-lg",
                   ),
                 ],
-                [html.text(g_(i18n_ctx, "Join Fluxer"))],
+                [html.text(g_(i18n_ctx, "Join Atomic Radius"))],
               ),
             ],
           ),

@@ -273,7 +273,7 @@ pub fn render_with_overlay(ctx: Context) -> Element(a) {
         ],
         [
           icons.download([attribute.class("h-6 w-6 shrink-0")]),
-          html.span([], [html.text(g_(i18n_ctx, "Download Fluxer"))]),
+          html.span([], [html.text(g_(i18n_ctx, "Download Atomic Radius"))]),
         ],
       )
   }
@@ -312,7 +312,7 @@ fn render_mobile_redirect_button(ctx: Context, style: ButtonStyle) -> Element(a)
         ]),
       ]),
       html.span([attribute.class(helper_class)], [
-        html.text(g_(i18n_ctx, "Use Fluxer in your mobile browser for now")),
+        html.text(g_(i18n_ctx, "Use Atomic Radius in your mobile browser for now")),
       ]),
     ],
   )

@@ -32,6 +32,12 @@ export const Endpoints = {
 	AUTH_WEBAUTHN_AUTHENTICATE: '/auth/webauthn/authenticate',
 	AUTH_LOGOUT: '/auth/logout',
 	AUTH_REGISTER: '/auth/register',
+	AUTH_SOCIAL_PROVIDERS: '/auth/social/providers',
+	AUTH_SOCIAL_START: (provider: string, redirectTo: string) =>
+		`/auth/social/${provider}/start?redirect_to=${encodeURIComponent(redirectTo)}`,
+	AUTH_SOCIAL_TOKEN: '/auth/social/token',
+	AUTH_SOCIAL_REGISTER: '/auth/social/register',
+	AUTH_SOCIAL_REGISTER_TICKET: (ticket: string) => `/auth/social/register/${encodeURIComponent(ticket)}`,
 	AUTH_USERNAME_SUGGESTIONS: '/auth/username-suggestions',
 	AUTH_REDEEM_BETA_CODE: '/auth/redeem-beta-code',
 	AUTH_SESSIONS: '/auth/sessions',

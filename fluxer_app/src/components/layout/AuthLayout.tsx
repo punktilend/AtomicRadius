@@ -34,7 +34,7 @@ import {useAuthBackground} from '~/hooks/useAuthBackground';
 import {useNativePlatform} from '~/hooks/useNativePlatform';
 import i18n, {initI18n} from '~/i18n';
 import FluxerWordmarkMonochrome from '~/images/fluxer-logo-wordmark-monochrome.svg?react';
-import foodPatternUrl from '~/images/i-like-food.svg';
+import foodPatternUrl from '~/images/atomic-pattern.svg';
 import {useLocation} from '~/lib/router';
 import {isMobileExperienceEnabled} from '~/utils/mobileExperience';
 import styles from './AuthLayout.module.css';

@@ -26,7 +26,8 @@ export const ASSETS_DIR = path.join(DIST_DIR, 'assets');
 export const PKGS_DIR = path.join(ROOT_DIR, 'pkgs');
 export const PUBLIC_DIR = path.join(ROOT_DIR, 'assets');
 
-export const CDN_ENDPOINT = 'https://fluxerstatic.com';
+const CDN_ENDPOINT_RAW = process.env.PUBLIC_CDN_ENDPOINT?.trim() ?? '';
+export const CDN_ENDPOINT = CDN_ENDPOINT_RAW.endsWith('/') ? CDN_ENDPOINT_RAW.slice(0, -1) : CDN_ENDPOINT_RAW;
 
 export const DEV_PORT = 3000;
 

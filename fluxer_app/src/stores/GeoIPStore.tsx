@@ -72,8 +72,6 @@ class GeoIPStore {
 				this.loaded = true;
 				this.error = error instanceof Error ? error.message : 'Unknown error';
 			});
-
-			throw error;
 		}
 	}
 

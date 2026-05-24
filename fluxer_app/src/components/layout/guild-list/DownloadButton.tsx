@@ -38,16 +38,16 @@ export const DownloadButton = observer(() => {
 	const mergedButtonRef = useMergeRefs([hoverRef, buttonRef]);
 
 	const handleDownload = () => {
-		openExternalUrl('https://fluxer.app/download');
+		openExternalUrl('https://atomicradius.app/download');
 	};
 
 	return (
 		<div className={guildStyles.addGuildButton}>
-			<Tooltip position="right" size="large" text={() => t`Download Fluxer`}>
+			<Tooltip position="right" size="large" text={() => t`Download Atomic Radius`}>
 				<FocusRing offset={-2} focusTarget={buttonRef} ringTarget={iconRef}>
 					<button
 						type="button"
-						aria-label={t`Download Fluxer`}
+						aria-label={t`Download Atomic Radius`}
 						onClick={handleDownload}
 						className={styles.button}
 						ref={mergedButtonRef}

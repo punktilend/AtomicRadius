@@ -120,11 +120,11 @@ export const VideoTab: React.FC<VideoTabProps> = observer(
 							<p className={styles.deviceNoticeDescription}>
 								{permissionStatus === 'denied' ? (
 									<Trans>
-										Allow Fluxer to access your camera in System Settings → Privacy &amp; Security → Camera to preview
+										Allow Atomic Radius to access your camera in System Settings → Privacy &amp; Security → Camera to preview
 										and select devices.
 									</Trans>
 								) : (
-									<Trans>Fluxer needs access to your camera before we can list it here.</Trans>
+									<Trans>Atomic Radius needs access to your camera before we can list it here.</Trans>
 								)}
 							</p>
 						</div>

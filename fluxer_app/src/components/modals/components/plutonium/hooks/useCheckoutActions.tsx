@@ -104,7 +104,7 @@ export const useCheckoutActions = (priceIds: PriceIds | null, isGiftSubscription
 						modal(() => (
 							<ConfirmModal
 								title={t`Complete Payment`}
-								description={t`You are now navigating to Stripe to complete the payment. Return to Fluxer once you've completed it!`}
+								description={t`You are now navigating to Stripe to complete the payment. Return to Atomic Radius once you've completed it!`}
 								primaryText={t`OK`}
 								primaryVariant="primary"
 								secondaryText={t`Cancel`}

@@ -55,18 +55,25 @@ export class StorageService implements IStorageService {
 	private readonly presignClient: S3Client;
 
 	constructor() {
+		const endpoint = Config.s3.endpoint || undefined;
+		const credentials =
+			Config.s3.accessKeyId && Config.s3.secretAccessKey
+				? {
+						accessKeyId: Config.s3.accessKeyId,
+						secretAccessKey: Config.s3.secretAccessKey,
+					}
+				: undefined;
+		const forcePathStyle = endpoint != null;
+
 		const baseInit = {
-			endpoint: Config.s3.endpoint,
+			endpoint,
 			region: 'us-east-1',
-			credentials: {
-				accessKeyId: Config.s3.accessKeyId,
-				secretAccessKey: Config.s3.secretAccessKey,
-			},
+			credentials,
 			requestChecksumCalculation: 'WHEN_REQUIRED',
 			responseChecksumValidation: 'WHEN_REQUIRED',
 		} as const;
 
-		this.s3 = new S3Client({...baseInit, forcePathStyle: true});
+		this.s3 = new S3Client({...baseInit, forcePathStyle});
 		this.presignClient = new S3Client({...baseInit, forcePathStyle: false});
 	}
 

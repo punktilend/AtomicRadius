@@ -95,7 +95,7 @@ const BlockedUsersTab: React.FC = observer(() => {
 								TextCopyActionCreators.copy(i18n, user.tag, true);
 							}}
 						>
-							{t`Copy FluxerTag`}
+							{t`Copy Radius Tag`}
 						</MenuItem>
 						<MenuItem
 							icon={<IdentificationCardIcon size={16} />}

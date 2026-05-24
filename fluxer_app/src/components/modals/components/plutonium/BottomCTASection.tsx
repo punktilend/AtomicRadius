@@ -52,7 +52,7 @@ export const BottomCTASection: React.FC<BottomCTASectionProps> = observer(
 		purchaseDisabledTooltip,
 	}) => {
 		const {t} = useLingui();
-		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Fluxer Plutonium.`;
+		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Atomic Radius Plutonium.`;
 
 		return (
 			<div className={styles.container}>

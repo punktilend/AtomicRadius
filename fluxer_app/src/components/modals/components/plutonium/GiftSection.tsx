@@ -58,7 +58,7 @@ export const GiftSection: React.FC<GiftSectionProps> = observer(
 		purchaseDisabledTooltip,
 	}) => {
 		const {t} = useLingui();
-		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Fluxer Plutonium.`;
+		const tooltipText: React.ReactNode = purchaseDisabledTooltip ?? t`Claim your account to purchase Atomic Radius Plutonium.`;
 
 		return (
 			<div ref={giftSectionRef}>

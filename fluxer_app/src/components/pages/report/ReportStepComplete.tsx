@@ -34,7 +34,7 @@ export const ReportStepComplete: React.FC<Props> = ({onStartOver}) => (
 	<StatusSlate
 		Icon={FilledCheckCircleIcon}
 		title={<Trans>Report submitted</Trans>}
-		description={<Trans>Thank you for helping keep Fluxer safe. We'll review your report as soon as possible.</Trans>}
+		description={<Trans>Thank you for helping keep Atomic Radius safe. We'll review your report as soon as possible.</Trans>}
 		iconStyle={{color: 'var(--status-success)'}}
 		actions={[
 			{

@@ -101,7 +101,7 @@ export const BotProfileSection: React.FC<BotProfileSectionProps> = ({
 								placeholder={t`BotName`}
 								maxLength={32}
 								required
-								label={t`FluxerTag`}
+								label={t`Radius Tag`}
 							/>
 						)}
 					/>

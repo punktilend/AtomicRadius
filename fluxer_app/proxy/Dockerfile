@@ -8,10 +8,11 @@ RUN go mod download
 
 COPY fluxer_app/proxy/ .
 
-COPY fluxer_app/dist/index.html assets/index.html
-COPY fluxer_app/dist/manifest.json assets/manifest.json
-COPY fluxer_app/dist/sw.js* assets/
-COPY fluxer_app/dist/version.json assets/version.json
+COPY fluxer_app/dist/ assets/
+RUN set -eu; \
+  for ref in $(grep -o '"/assets/[^"]*"' assets/index.html | tr -d '"' | sed 's#^/##' | sort -u); do \
+    test -f "assets/${ref}" || { echo "missing app asset: ${ref}" >&2; exit 1; }; \
+  done
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64

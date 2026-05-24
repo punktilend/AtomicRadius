@@ -109,7 +109,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = observer(
 		const tooltipText: string | (() => React.ReactNode) =
 			purchaseDisabledTooltip != null
 				? () => purchaseDisabledTooltip
-				: t`Claim your account to purchase or redeem Fluxer Plutonium.`;
+				: t`Claim your account to purchase or redeem Atomic Radius Plutonium.`;
 
 		const wrapIfDisabled = (element: React.ReactElement, key: string, disabled: boolean) =>
 			disabled ? (

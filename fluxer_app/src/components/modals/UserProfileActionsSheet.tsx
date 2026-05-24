@@ -205,7 +205,7 @@ export const UserProfileActionsSheet: React.FC<UserProfileActionsSheetProps> = o
 			items: [
 				{
 					icon: <CopyIcon className={styles.icon} />,
-					label: t`Copy FluxerTag`,
+					label: t`Copy Radius Tag`,
 					onClick: handleCopyFluxerTag,
 				},
 				{

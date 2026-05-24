@@ -140,7 +140,7 @@ export const VoiceTab: React.FC<VoiceTabProps> = observer(
 							description={
 								<p>
 									<Trans>
-										In your browser, Push-to-Talk will only work when the Fluxer tab is focused. For system-wide
+										In your browser, Push-to-Talk will only work when the Atomic Radius tab is focused. For system-wide
 										Push-to-Talk that works even when gaming or using other apps, download the desktop app.
 									</Trans>
 								</p>
@@ -149,7 +149,7 @@ export const VoiceTab: React.FC<VoiceTabProps> = observer(
 							primaryVariant="primary"
 							secondaryText={t`I understand`}
 							onPrimary={() => {
-								void openExternalUrl('https://fluxer.app/download');
+								void openExternalUrl('https://atomicradius.app/download');
 							}}
 							onSecondary={() => {
 								KeybindStore.setTransmitMode(mode);
@@ -200,16 +200,16 @@ export const VoiceTab: React.FC<VoiceTabProps> = observer(
 								{permissionStatus === 'denied' ? (
 									isNativeDesktop ? (
 										<Trans>
-											Allow Fluxer to access your microphone in System Settings → Privacy &amp; Security → Microphone.
+											Allow Atomic Radius to access your microphone in System Settings → Privacy &amp; Security → Microphone.
 										</Trans>
 									) : (
 										<Trans>
-											Allow Fluxer to access your microphone. Check your browser address bar or settings to enable
+											Allow Atomic Radius to access your microphone. Check your browser address bar or settings to enable
 											permissions.
 										</Trans>
 									)
 								) : (
-									<Trans>Fluxer needs access to list the available microphones and speakers.</Trans>
+									<Trans>Atomic Radius needs access to list the available microphones and speakers.</Trans>
 								)}
 							</p>
 						</div>
@@ -312,7 +312,7 @@ export const VoiceTab: React.FC<VoiceTabProps> = observer(
 									!isNativeDesktop
 										? {
 												label: <Trans>Download the desktop app for system-wide Push-to-Talk</Trans>,
-												onClick: () => void openExternalUrl('https://fluxer.app/download'),
+												onClick: () => void openExternalUrl('https://atomicradius.app/download'),
 											}
 										: {
 												label: <Trans>Enable Input Monitoring permission</Trans>,

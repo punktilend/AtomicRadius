@@ -29,7 +29,7 @@ import type {AccountSummary} from '~/stores/AccountManager';
 import {getAccountAvatarUrl} from './AccountListItem';
 import styles from './AccountRow.module.css';
 
-const STANDARD_INSTANCES = new Set(['web.fluxer.app', 'web.canary.fluxer.app']);
+const STANDARD_INSTANCES = new Set(['web.atomicradius.app', 'web.canary.atomicradius.app']);
 
 function getInstanceHost(account: AccountSummary): string | null {
 	const endpoint = account.instance?.apiEndpoint;

@@ -42,7 +42,7 @@ export const generateTotpSecret = () => encodeTotpKey(getRandomBytes());
 
 export const encodeTotpSecret = (secret: string) => secret.replace(/[\s._-]+/g, '').toUpperCase();
 
-export const encodeTotpSecretAsURL = (accountName: string, secret: string, issuer = 'Fluxer') =>
+export const encodeTotpSecretAsURL = (accountName: string, secret: string, issuer = 'Atomic Radius') =>
 	`otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(accountName)}\
 ?secret=${encodeTotpSecret(secret)}\
 &issuer=${encodeURIComponent(issuer)}`;

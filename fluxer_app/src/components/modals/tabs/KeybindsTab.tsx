@@ -90,7 +90,7 @@ const KeybindRow = observer(
 								<Trans>Global shortcut</Trans>
 							</span>
 							<span className={styles.globalDescription}>
-								<Trans>Run this shortcut even when Fluxer is not focused.</Trans>
+								<Trans>Run this shortcut even when Atomic Radius is not focused.</Trans>
 							</span>
 						</div>
 						{isNativeDesktop ? (

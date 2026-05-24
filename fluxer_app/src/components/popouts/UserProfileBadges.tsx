@@ -63,7 +63,7 @@ export const UserProfileBadges: React.FC<UserProfileBadgesProps> = observer(
 				result.push({
 					key: 'staff',
 					iconUrl: cdnUrl('badges/staff.svg'),
-					tooltip: t`Fluxer Staff`,
+					tooltip: t`Atomic Radius Staff`,
 					url: Routes.careers(),
 				});
 			}
@@ -72,7 +72,7 @@ export const UserProfileBadges: React.FC<UserProfileBadgesProps> = observer(
 				result.push({
 					key: 'ctp',
 					iconUrl: cdnUrl('badges/ctp.svg'),
-					tooltip: t`Fluxer Community Team`,
+					tooltip: t`Atomic Radius Community Team`,
 					url: Routes.careers(),
 				});
 			}
@@ -81,7 +81,7 @@ export const UserProfileBadges: React.FC<UserProfileBadgesProps> = observer(
 				result.push({
 					key: 'partner',
 					iconUrl: cdnUrl('badges/partner.svg'),
-					tooltip: t`Fluxer Partner`,
+					tooltip: t`Atomic Radius Partner`,
 					url: Routes.partners(),
 				});
 			}
@@ -90,24 +90,24 @@ export const UserProfileBadges: React.FC<UserProfileBadgesProps> = observer(
 				result.push({
 					key: 'bug_hunter',
 					iconUrl: cdnUrl('badges/bug-hunter.svg'),
-					tooltip: t`Fluxer Bug Hunter`,
+					tooltip: t`Atomic Radius Bug Hunter`,
 					url: Routes.bugs(),
 				});
 			}
 
 			if (profile?.premiumType && profile.premiumType !== UserPremiumTypes.NONE) {
-				let tooltipText = t`Fluxer Plutonium`;
+				let tooltipText = t`Atomic Radius Plutonium`;
 
 				if (profile.premiumType === UserPremiumTypes.LIFETIME) {
 					if (profile.premiumSince) {
 						const premiumSinceFormatted = DateUtils.getFormattedShortDate(profile.premiumSince);
-						tooltipText = `Fluxer Visionary since ${premiumSinceFormatted}`;
+						tooltipText = `Atomic Radius Visionary since ${premiumSinceFormatted}`;
 					} else {
-						tooltipText = `Fluxer Visionary`;
+						tooltipText = `Atomic Radius Visionary`;
 					}
 				} else if (profile.premiumSince) {
 					const premiumSinceFormatted = DateUtils.getFormattedShortDate(profile.premiumSince);
-					tooltipText = `Fluxer Plutonium subscriber since ${premiumSinceFormatted}`;
+					tooltipText = `Atomic Radius Plutonium subscriber since ${premiumSinceFormatted}`;
 				}
 
 				result.push({

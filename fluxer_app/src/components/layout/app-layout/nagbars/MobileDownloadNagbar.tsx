@@ -29,7 +29,7 @@ import styles from './MobileDownloadNagbar.module.css';
 
 export const MobileDownloadNagbar = observer(({isMobile}: {isMobile: boolean}) => {
 	const handleDownload = () => {
-		openExternalUrl('https://fluxer.app/download#mobile');
+		openExternalUrl('https://atomicradius.app/download#mobile');
 	};
 
 	const handleDismiss = () => {
@@ -48,7 +48,7 @@ export const MobileDownloadNagbar = observer(({isMobile}: {isMobile: boolean}) =
 				isMobile={isMobile}
 				message={
 					<Trans>
-						Get Fluxer on mobile to receive notifications on the go and stay connected with your friends anytime.
+						Get Atomic Radius on mobile to receive notifications on the go and stay connected with your friends anytime.
 					</Trans>
 				}
 				actions={

@@ -98,7 +98,7 @@ export const EmojiAttributionSubtext = observer(function EmojiAttributionSubtext
 		return (
 			<div className={classes.container}>
 				<span className={classes.text}>
-					<Trans>This is a default emoji on Fluxer.</Trans>
+					<Trans>This is a default emoji on Atomic Radius.</Trans>
 				</span>
 			</div>
 		);

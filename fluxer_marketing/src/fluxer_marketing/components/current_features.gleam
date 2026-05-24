@@ -146,7 +146,7 @@ pub fn render(ctx: Context) -> Element(a) {
               g_(i18n_ctx, "Self-hosting"),
               g_(
                 i18n_ctx,
-                "Run the Fluxer backend on your own hardware and connect with our apps.",
+                "Run the Atomic Radius backend on your own hardware and connect with our apps.",
               ),
               [
                 g_(i18n_ctx, "Fully open source (AGPLv3)"),

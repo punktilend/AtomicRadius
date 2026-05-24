@@ -27,6 +27,8 @@ import {
 	LogoutAuthSessionsRequest,
 	RegisterRequest,
 	ResetPasswordRequest,
+	SocialRegisterRequest,
+	SocialTokenRequest,
 	UsernameSuggestionsRequest,
 	VerifyEmailRequest,
 } from '~/auth/AuthModel';
@@ -43,6 +45,94 @@ import {generateUsernameSuggestions} from '~/utils/UsernameSuggestionUtils';
 import {Validator} from '~/Validator';
 
 export const AuthController = (app: HonoApp) => {
+	app.get('/auth/social/providers', async (ctx) => {
+		return ctx.json({providers: ctx.get('authService').getSocialProviders()});
+	});
+
+	app.get(
+		'/auth/social/:provider/start',
+		RateLimitMiddleware(RateLimitConfigs.AUTH_LOGIN),
+		Validator('param', z.object({provider: createStringType()})),
+		Validator('query', z.object({redirect_to: createStringType().optional()})),
+		async (ctx) => {
+			const {provider} = ctx.req.valid('param');
+			const {redirect_to} = ctx.req.valid('query');
+			const url = await ctx.get('authService').getSocialAuthorizationUrl(provider, redirect_to || '/');
+			return ctx.redirect(url);
+		},
+	);
+
+	const handleSocialCallback = async (ctx: any) => {
+		const {provider} = ctx.req.valid('param');
+		const query = ctx.req.valid('query') as {code?: string; state?: string};
+		let code = query.code;
+		let state = query.state;
+
+		if (!code || !state) {
+			const body = (await ctx.req.parseBody()) as {code?: string; state?: string};
+			code = code || body.code;
+			state = state || body.state;
+		}
+
+		if (!code) throw InputValidationError.create('code', 'Missing social login code');
+		if (!state) throw InputValidationError.create('state', 'Missing social login state');
+
+		const redirectUrl = await ctx.get('authService').completeSocialCallback({
+			providerId: provider,
+			code,
+			state,
+			request: ctx.req.raw,
+		});
+		return ctx.redirect(redirectUrl);
+	};
+
+	app.get(
+		'/auth/social/:provider/callback',
+		Validator('param', z.object({provider: createStringType()})),
+		Validator('query', z.object({code: createStringType().optional(), state: createStringType().optional()})),
+		handleSocialCallback,
+	);
+
+	app.post(
+		'/auth/social/:provider/callback',
+		Validator('param', z.object({provider: createStringType()})),
+		Validator('query', z.object({code: createStringType().optional(), state: createStringType().optional()})),
+		handleSocialCallback,
+	);
+
+	app.post(
+		'/auth/social/token',
+		RateLimitMiddleware(RateLimitConfigs.AUTH_LOGIN),
+		Validator('json', SocialTokenRequest),
+		async (ctx) => {
+			const {ticket} = ctx.req.valid('json');
+			return ctx.json(await ctx.get('authService').redeemSocialTokenTicket(ticket));
+		},
+	);
+
+	app.get(
+		'/auth/social/register/:ticket',
+		RateLimitMiddleware(RateLimitConfigs.AUTH_REGISTER),
+		Validator('param', z.object({ticket: createStringType()})),
+		async (ctx) => {
+			const {ticket} = ctx.req.valid('param');
+			return ctx.json(await ctx.get('authService').getSocialRegistrationTicket(ticket));
+		},
+	);
+
+	app.post(
+		'/auth/social/register',
+		CaptchaMiddleware,
+		RateLimitMiddleware(RateLimitConfigs.AUTH_REGISTER),
+		Validator('json', SocialRegisterRequest),
+		async (ctx) => {
+			const data = ctx.req.valid('json');
+			const request = ctx.req.raw;
+			const requestCache = ctx.get('requestCache');
+			return ctx.json(await ctx.get('authService').registerSocial({data, request, requestCache}));
+		},
+	);
+
 	app.post(
 		'/auth/register',
 		CaptchaMiddleware,

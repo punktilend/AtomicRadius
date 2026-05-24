@@ -158,10 +158,10 @@ const focusOrOpenClient = async (targetUrl: string, targetUserId?: string): Prom
 
 self.addEventListener('push', (event: PushEvent) => {
 	const payload: PushPayload = event.data?.json?.() ?? {
-		title: 'Fluxer',
+		title: 'Atomic Radius',
 	};
 
-	const title = payload.title ?? 'Fluxer';
+	const title = payload.title ?? 'Atomic Radius';
 	const options: NotificationOptions = {
 		body: payload.body ?? undefined,
 		icon: payload.icon ?? undefined,

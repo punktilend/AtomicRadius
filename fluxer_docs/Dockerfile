@@ -1,7 +1,7 @@
 FROM node:24-bookworm-slim AS base
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y --no-install-recommends libvips libvips-dev curl openssl && rm -rf /var/lib/apt/lists/*
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@10.26.0 --activate
 
 FROM base AS deps
 WORKDIR /usr/src/app

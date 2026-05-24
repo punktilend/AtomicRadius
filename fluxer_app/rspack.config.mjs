@@ -33,7 +33,8 @@ const DIST_DIR = path.join(ROOT_DIR, 'dist');
 const PKGS_DIR = path.join(ROOT_DIR, 'pkgs');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'assets');
 
-const CDN_ENDPOINT = 'https://fluxerstatic.com';
+const CDN_ENDPOINT_RAW = process.env.PUBLIC_CDN_ENDPOINT?.trim() ?? '';
+const CDN_ENDPOINT = CDN_ENDPOINT_RAW.endsWith('/') ? CDN_ENDPOINT_RAW.slice(0, -1) : CDN_ENDPOINT_RAW;
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = !isProduction;
@@ -59,7 +60,7 @@ export default () => {
 
 		output: {
 			path: DIST_DIR,
-			publicPath: isProduction ? `${CDN_ENDPOINT}/` : '/',
+			publicPath: isProduction && CDN_ENDPOINT ? `${CDN_ENDPOINT}/` : '/',
 			workerPublicPath: '/',
 			filename: isProduction ? 'assets/[contenthash:16].js' : devJsName,
 			chunkFilename: isProduction ? 'assets/[contenthash:16].js' : devJsName,
@@ -392,6 +393,11 @@ export default () => {
 					historyApiFallback: true,
 					allowedHosts: 'all',
 					client: {
+						overlay: {
+							errors: true,
+							warnings: false,
+							runtimeErrors: false,
+						},
 						webSocketURL: 'auto://0.0.0.0:0/ws',
 					},
 					headers: {

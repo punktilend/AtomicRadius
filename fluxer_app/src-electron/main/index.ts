@@ -68,12 +68,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.platform === 'win32') {
-	const appId = isCanary ? 'app.fluxer.canary' : 'app.fluxer';
+	const appId = isCanary ? 'com.atomicradius.canary' : 'com.atomicradius';
 	app.setAppUserModelId(appId);
 }
 
 if (process.platform === 'linux') {
-	const linuxName = isCanary ? 'Fluxer Canary' : 'Fluxer';
+	const linuxName = isCanary ? 'Atomic Radius Canary' : 'Atomic Radius';
 	app.setName(linuxName);
 }
 

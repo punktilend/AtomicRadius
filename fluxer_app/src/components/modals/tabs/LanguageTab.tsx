@@ -192,9 +192,9 @@ const LanguageTab = observer(() => {
 				<p className={styles.noticeText}>
 					<Trans>
 						All translations are currently LLM-generated with minimal human revision. We'd love to get real people to
-						help us localize Fluxer into your language! To do so, send an email to{' '}
-						<a href="mailto:i18n@fluxer.app" className={styles.link}>
-							i18n@fluxer.app
+						help us localize Atomic Radius into your language! To do so, send an email to{' '}
+						<a href="mailto:i18n@atomicradius.app" className={styles.link}>
+							i18n@atomicradius.app
 						</a>{' '}
 						and we'll be happy to accept your contributions.
 					</Trans>

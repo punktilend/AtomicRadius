@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Atomic Radius public DNS records for ALB routing.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: atomic-radius
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedPattern: "^[a-z][a-z0-9-]*$"
+  DomainName:
+    Type: String
+    Default: atomicradius.app
+  HostedZoneId:
+    Type: String
+  LoadBalancerDnsName:
+    Type: String
+  LoadBalancerHostedZoneId:
+    Type: String
+
+Resources:
+  ApexAliasRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !Sub "dualstack.${LoadBalancerDnsName}"
+        HostedZoneId: !Ref LoadBalancerHostedZoneId
+        EvaluateTargetHealth: false
+
+  WildcardAliasRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "*.${DomainName}"
+      Type: A
+      AliasTarget:
+        DNSName: !Sub "dualstack.${LoadBalancerDnsName}"
+        HostedZoneId: !Ref LoadBalancerHostedZoneId
+        EvaluateTargetHealth: false
+
+Outputs:
+  ApexRecordName:
+    Value: !Ref ApexAliasRecord
+  WildcardRecordName:
+    Value: !Ref WildcardAliasRecord

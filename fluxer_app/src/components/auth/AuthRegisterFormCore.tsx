@@ -38,7 +38,10 @@ import styles from './AuthPageStyles.module.css';
 interface FieldConfig {
 	showEmail?: boolean;
 	showPassword?: boolean;
+	showDisplayName?: boolean;
+	showUsername?: boolean;
 	showUsernameValidation?: boolean;
+	showBetaCode?: boolean;
 	showBetaCodeHint?: boolean;
 	requireBetaCode?: boolean;
 }
@@ -50,6 +53,8 @@ interface AuthRegisterFormCoreProps {
 	onRegister?: (response: {token: string; user_id: string}) => Promise<void>;
 	inviteCode?: string;
 	extraContent?: React.ReactNode;
+	socialTicket?: string | null;
+	initialGlobalName?: string;
 }
 
 export function AuthRegisterFormCore({
@@ -59,12 +64,17 @@ export function AuthRegisterFormCore({
 	onRegister,
 	inviteCode,
 	extraContent,
+	socialTicket,
+	initialGlobalName,
 }: AuthRegisterFormCoreProps) {
 	const {t} = useLingui();
 	const {
 		showEmail = false,
 		showPassword = false,
+		showDisplayName = true,
+		showUsername = true,
 		showUsernameValidation = false,
+		showBetaCode = true,
 		requireBetaCode = MODE !== 'development',
 	} = fields;
 
@@ -81,7 +91,7 @@ export function AuthRegisterFormCore({
 	const [usernameFocused, setUsernameFocused] = useState(false);
 
 	const initialValues: Record<string, string> = {
-		global_name: '',
+		global_name: initialGlobalName ?? '',
 		username: '',
 		betaCode: '',
 	};
@@ -94,16 +104,26 @@ export function AuthRegisterFormCore({
 				? `${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`
 				: '';
 
-		const response = await AuthenticationActionCreators.register({
-			global_name: values.global_name || undefined,
-			username: values.username || undefined,
-			email: showEmail ? values.email : undefined,
-			password: showPassword ? values.password : undefined,
-			beta_code: values.betaCode || '',
-			date_of_birth: dateOfBirth,
-			consent,
-			invite_code: inviteCode,
-		});
+		const response = socialTicket
+			? await AuthenticationActionCreators.registerSocial({
+					social_ticket: socialTicket,
+					global_name: values.global_name || undefined,
+					username: values.username || undefined,
+					beta_code: values.betaCode || '',
+					date_of_birth: dateOfBirth,
+					consent,
+					invite_code: inviteCode,
+				})
+			: await AuthenticationActionCreators.register({
+					global_name: values.global_name || undefined,
+					username: values.username || undefined,
+					email: showEmail ? values.email : undefined,
+					password: showPassword ? values.password : undefined,
+					beta_code: values.betaCode || '',
+					date_of_birth: dateOfBirth,
+					consent,
+					invite_code: inviteCode,
+				});
 
 		if (onRegister) {
 			await onRegister(response);
@@ -138,11 +158,11 @@ export function AuthRegisterFormCore({
 		if (!selectedMonth || !selectedDay || !selectedYear) {
 			missing.push({key: 'date_of_birth', label: t`Date of birth`});
 		}
-		if (requireBetaCode && !form.getValue('betaCode')) {
+		if (showBetaCode && requireBetaCode && !form.getValue('betaCode')) {
 			missing.push({key: 'betaCode', label: t`Beta code`});
 		}
 		return missing;
-	}, [form, selectedMonth, selectedDay, selectedYear, showEmail, showPassword, requireBetaCode]);
+	}, [form, selectedMonth, selectedDay, selectedYear, showEmail, showPassword, showBetaCode, requireBetaCode]);
 
 	const usernameValue = form.getValue('username');
 	const showValidationRules = showUsernameValidation && usernameValue && (usernameFocused || usernameValue.length > 0);
@@ -163,37 +183,41 @@ export function AuthRegisterFormCore({
 				/>
 			)}
 
-			<FormField
-				id={globalNameId}
-				name="global_name"
-				type="text"
-				label={t`Display name (optional)`}
-				placeholder={t`What should people call you?`}
-				value={form.getValue('global_name')}
-				onChange={(value) => form.setValue('global_name', value)}
-				error={form.getError('global_name') || fieldErrors?.global_name}
-			/>
-
-			<div>
+			{showDisplayName && (
 				<FormField
-					id={usernameId}
-					name="username"
+					id={globalNameId}
+					name="global_name"
 					type="text"
-					autoComplete="username"
-					label={t`Username (optional)`}
-					placeholder={t`Leave blank for a random username`}
-					value={usernameValue}
-					onChange={(value) => form.setValue('username', value)}
-					onFocus={() => setUsernameFocused(true)}
-					onBlur={() => setUsernameFocused(false)}
-					error={form.getError('username') || fieldErrors?.username}
+					label={t`Display name (optional)`}
+					placeholder={t`What should people call you?`}
+					value={form.getValue('global_name')}
+					onChange={(value) => form.setValue('global_name', value)}
+					error={form.getError('global_name') || fieldErrors?.global_name}
 				/>
-				<span className={styles.usernameHint}>
-					<Trans>A 4-digit tag will be added automatically to ensure uniqueness</Trans>
-				</span>
-			</div>
+			)}
 
-			{showUsernameValidation && (
+			{showUsername && (
+				<div>
+					<FormField
+						id={usernameId}
+						name="username"
+						type="text"
+						autoComplete="username"
+						label={t`Username (optional)`}
+						placeholder={t`Leave blank for a random username`}
+						value={usernameValue}
+						onChange={(value) => form.setValue('username', value)}
+						onFocus={() => setUsernameFocused(true)}
+						onBlur={() => setUsernameFocused(false)}
+						error={form.getError('username') || fieldErrors?.username}
+					/>
+					<span className={styles.usernameHint}>
+						<Trans>A 4-digit tag will be added automatically to ensure uniqueness</Trans>
+					</span>
+				</div>
+			)}
+
+			{showUsername && showUsernameValidation && (
 				<AnimatePresence>
 					{showValidationRules && (
 						<div className={styles.usernameValidation}>
@@ -203,7 +227,7 @@ export function AuthRegisterFormCore({
 				</AnimatePresence>
 			)}
 
-			{!usernameValue && (
+			{showUsername && !usernameValue && (
 				<UsernameSuggestions suggestions={suggestions} onSelect={(username) => form.setValue('username', username)} />
 			)}
 
@@ -221,28 +245,29 @@ export function AuthRegisterFormCore({
 				/>
 			)}
 
-			{requireBetaCode ? (
-				<FormField
-					id={betaCodeId}
-					name="betaCode"
-					type="text"
-					required
-					label={t`Beta code`}
-					value={form.getValue('betaCode')}
-					onChange={(value) => form.setValue('betaCode', value)}
-					error={form.getError('betaCode') || fieldErrors?.beta_code}
-				/>
-			) : (
-				<FormField
-					id={betaCodeId}
-					name="betaCode"
-					type="text"
-					label={t`Beta code (optional)`}
-					value={form.getValue('betaCode')}
-					onChange={(value) => form.setValue('betaCode', value)}
-					error={form.getError('betaCode') || fieldErrors?.beta_code}
-				/>
-			)}
+			{showBetaCode &&
+				(requireBetaCode ? (
+					<FormField
+						id={betaCodeId}
+						name="betaCode"
+						type="text"
+						required
+						label={t`Beta code`}
+						value={form.getValue('betaCode')}
+						onChange={(value) => form.setValue('betaCode', value)}
+						error={form.getError('betaCode') || fieldErrors?.beta_code}
+					/>
+				) : (
+					<FormField
+						id={betaCodeId}
+						name="betaCode"
+						type="text"
+						label={t`Beta code (optional)`}
+						value={form.getValue('betaCode')}
+						onChange={(value) => form.setValue('betaCode', value)}
+						error={form.getError('betaCode') || fieldErrors?.beta_code}
+					/>
+				))}
 
 			<DateOfBirthField
 				selectedMonth={selectedMonth}

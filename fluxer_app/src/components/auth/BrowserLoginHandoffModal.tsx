@@ -251,7 +251,7 @@ const BrowserLoginHandoffModal = observer(
 							footer={
 								!instanceError ? (
 									<p className={styles.inputHelper}>
-										<Trans>Enter the API endpoint of the Fluxer instance you want to connect to.</Trans>
+										<Trans>Enter the API endpoint of the Atomic Radius instance you want to connect to.</Trans>
 									</p>
 								) : null
 							}
@@ -306,7 +306,7 @@ const BrowserLoginHandoffModal = observer(
 						</div>
 					) : showInstanceOption ? (
 						<button type="button" className={styles.instanceLink} onClick={handleShowInstanceView}>
-							<Trans>I want to use a custom Fluxer instance</Trans>
+							<Trans>I want to use a custom Atomic Radius instance</Trans>
 						</button>
 					) : null}
 

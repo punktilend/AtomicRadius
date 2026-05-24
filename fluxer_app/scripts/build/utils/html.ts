@@ -65,7 +65,7 @@ export async function generateHtml(options: GenerateHtmlOptions): Promise<string
 	const indexHtmlPath = path.join(ROOT_DIR, 'index.html');
 	let html = await fs.promises.readFile(indexHtmlPath, 'utf-8');
 
-	const baseUrl = production ? `${CDN_ENDPOINT}/` : '/';
+	const baseUrl = production && CDN_ENDPOINT ? `${CDN_ENDPOINT}/` : '/';
 
 	const cssModulesFile = buildOutput.cssBundleFile ?? (await findCssModulesFile());
 	const cssFiles = cssModulesFile ? [cssModulesFile] : buildOutput.cssFiles;

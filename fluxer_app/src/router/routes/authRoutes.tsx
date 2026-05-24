@@ -35,6 +35,7 @@ import PendingVerificationPage from '~/components/pages/PendingVerificationPage'
 import RegisterPage from '~/components/pages/RegisterPage';
 import {ReportPage} from '~/components/pages/ReportPage';
 import ResetPasswordPage from '~/components/pages/ResetPasswordPage';
+import SocialAuthCallbackPage from '~/components/pages/SocialAuthCallbackPage';
 import ThemeLoginPage from '~/components/pages/ThemeLoginPage';
 import ThemeRegisterPage from '~/components/pages/ThemeRegisterPage';
 import VerifyEmailPage from '~/components/pages/VerifyEmailPage';
@@ -249,6 +250,13 @@ const authorizeIPRoute = createRoute({
 	component: () => <AuthorizeIPPage />,
 });
 
+const socialAuthCallbackRoute = createRoute({
+	getParentRoute: () => authLayoutRoute,
+	id: 'socialAuthCallback',
+	path: Routes.SOCIAL_AUTH_CALLBACK,
+	component: () => <SocialAuthCallbackPage />,
+});
+
 const pendingVerificationRoute = createRoute({
 	getParentRoute: () => authLayoutRoute,
 	id: 'pendingVerification',
@@ -304,6 +312,7 @@ export const authRouteTree = authLayoutRoute.addChildren([
 	emailRevertRoute,
 	verifyEmailRoute,
 	authorizeIPRoute,
+	socialAuthCallbackRoute,
 	pendingVerificationRoute,
 	reportRoute,
 	...(RuntimeConfigStore.isSelfHosted() ? [] : [giftRegisterRoute, giftLoginRoute]),

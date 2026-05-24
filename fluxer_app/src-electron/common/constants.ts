@@ -17,10 +17,10 @@
  * along with Fluxer. If not, see <https://www.gnu.org/licenses/>.
  */
 
-export const APP_PROTOCOL = 'fluxer';
+export const APP_PROTOCOL = 'atomicradius';
 
-export const STABLE_APP_URL = 'https://web.fluxer.app';
-export const CANARY_APP_URL = 'https://web.canary.fluxer.app';
+export const STABLE_APP_URL = process.env.ATOMIC_RADIUS_APP_URL ?? 'http://localhost:8088';
+export const CANARY_APP_URL = process.env.ATOMIC_RADIUS_CANARY_APP_URL ?? process.env.ATOMIC_RADIUS_APP_URL ?? 'http://localhost:8088';
 
 export const DEFAULT_WINDOW_WIDTH = 1280;
 export const DEFAULT_WINDOW_HEIGHT = 800;

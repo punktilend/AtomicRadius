@@ -1,3 +1,5 @@
+set shell := ["bash", "-euo", "pipefail", "-c"]
+
 env_file := "dev/.env"
 compose_file := "dev/compose.yaml"
 data_compose := "dev/compose.data.yaml"

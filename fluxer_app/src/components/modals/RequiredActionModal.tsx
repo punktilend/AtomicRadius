@@ -140,16 +140,16 @@ const getDescriptionDescriptor = (mode: VerificationMode, reverify = false): Mes
 	switch (mode) {
 		case 'email':
 			return reverify
-				? msg`We've detected suspicious activity on your account. Please reverify your email address to continue using Fluxer.`
-				: msg`We've detected suspicious activity on your account. Please verify your email address to continue using Fluxer.`;
+				? msg`We've detected suspicious activity on your account. Please reverify your email address to continue using Atomic Radius.`
+				: msg`We've detected suspicious activity on your account. Please verify your email address to continue using Atomic Radius.`;
 		case 'phone':
 			return reverify
-				? msg`We've detected suspicious activity on your account. Please reverify your phone number to continue using Fluxer.`
-				: msg`We've detected suspicious activity on your account. Please verify your phone number to continue using Fluxer.`;
+				? msg`We've detected suspicious activity on your account. Please reverify your phone number to continue using Atomic Radius.`
+				: msg`We've detected suspicious activity on your account. Please verify your phone number to continue using Atomic Radius.`;
 		case 'email_or_phone':
 			return reverify
-				? msg`We've detected suspicious activity on your account. Please reverify your email address or phone number to continue using Fluxer.`
-				: msg`We've detected suspicious activity on your account. Please verify your email address or phone number to continue using Fluxer.`;
+				? msg`We've detected suspicious activity on your account. Please reverify your email address or phone number to continue using Atomic Radius.`
+				: msg`We've detected suspicious activity on your account. Please verify your email address or phone number to continue using Atomic Radius.`;
 	}
 };
 

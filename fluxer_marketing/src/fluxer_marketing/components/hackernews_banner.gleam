@@ -33,16 +33,16 @@ pub fn render(ctx: Context) -> Element(a) {
     ],
     [
       html.p([attribute.class("text-sm md:text-base text-white/90")], [
-        html.text(g_(i18n_ctx, "Try it without an email at")),
+        html.text(g_(i18n_ctx, "Open Atomic Radius at")),
         html.text(" "),
         html.a(
           [
-            attribute.href("https://fluxer.gg/fluxer-hq"),
+            attribute.href("https://atomicradius.app"),
             attribute.class(
               "font-semibold text-white underline underline-offset-2 hover:no-underline",
             ),
           ],
-          [html.text("fluxer.gg/fluxer-hq")],
+          [html.text("atomicradius.app")],
         ),
       ]),
     ],

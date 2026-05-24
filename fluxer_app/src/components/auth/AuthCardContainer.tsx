@@ -20,8 +20,7 @@
 import clsx from 'clsx';
 import type {ReactNode} from 'react';
 import authLayoutStyles from '~/components/layout/AuthLayout.module.css';
-import FluxerLogo from '~/images/fluxer-logo-color.svg?react';
-import FluxerWordmark from '~/images/fluxer-wordmark.svg?react';
+import AtomicRadiusLogo from '~/images/atomic-radius-logo.png';
 import styles from './AuthCardContainer.module.css';
 
 export interface AuthCardContainerProps {
@@ -37,8 +36,12 @@ export function AuthCardContainer({showLogoSide = true, children, isInert = fals
 			<div className={clsx(authLayoutStyles.card, !showLogoSide && authLayoutStyles.cardSingle)}>
 				{showLogoSide && (
 					<div className={authLayoutStyles.logoSide}>
-						<FluxerLogo className={authLayoutStyles.logo} />
-						<FluxerWordmark className={authLayoutStyles.wordmark} />
+						<img
+							className={authLayoutStyles.logoMark}
+							src={AtomicRadiusLogo}
+							alt="Atomic Radius"
+							draggable={false}
+						/>
 					</div>
 				)}
 				<div className={clsx(authLayoutStyles.formSide, !showLogoSide && authLayoutStyles.formSideSingle)}>

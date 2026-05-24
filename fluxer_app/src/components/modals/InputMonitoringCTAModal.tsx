@@ -50,7 +50,7 @@ export const InputMonitoringCTAModal: React.FC<InputMonitoringCTAModalProps> = o
 				await openNativePermissionSettings('input-monitoring');
 				ToastActionCreators.createToast({
 					type: 'info',
-					children: t`Please enable Fluxer in System Settings → Privacy & Security → Input Monitoring.`,
+					children: t`Please enable Atomic Radius in System Settings → Privacy & Security → Input Monitoring.`,
 				});
 			}
 
@@ -74,7 +74,7 @@ export const InputMonitoringCTAModal: React.FC<InputMonitoringCTAModalProps> = o
 			<Modal.Content className={styles.content}>
 				<p>
 					<Trans>
-						Fluxer needs permission to monitor keyboard and mouse input so that <strong>Push-to-Talk</strong> and{' '}
+						Atomic Radius needs permission to monitor keyboard and mouse input so that <strong>Push-to-Talk</strong> and{' '}
 						<strong>Global Shortcuts</strong> work even when you're in another app or game.
 					</Trans>
 				</p>

@@ -280,7 +280,7 @@ pub fn download_script() -> Element(a) {
     "
 (function() {
   const DEBUG = true;
-  const log = (...args) => DEBUG && console.log('[Fluxer DL]', ...args);
+  const log = (...args) => DEBUG && console.log('[Atomic Radius DL]', ...args);
 
   async function detectArch() {
     log('Detecting architecture...');
