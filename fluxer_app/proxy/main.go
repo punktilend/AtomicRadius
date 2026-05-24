@@ -394,6 +394,8 @@ func (s *Server) buildCSP(nonce string) string {
 			"https://fluxerstatic.com",
 		},
 		"CONNECT": {
+			"https://*.atomicradius.app",
+			"wss://*.atomicradius.app",
 			"https://*.fluxer.app",
 			"wss://*.fluxer.app",
 			"https://*.fluxer.media",

@@ -20,6 +20,10 @@ Parameters:
     Type: String
     Default: ""
     Description: Optional ACM certificate ARN. If set, HTTPS listener is created and HTTP redirects to HTTPS.
+  GatewayHostName:
+    Type: String
+    Default: gateway.atomicradius.app
+    Description: Public host name for direct WebSocket gateway traffic.
 
 Conditions:
   HasCertificate: !Not [!Equals [!Ref CertificateArn, ""]]
@@ -234,6 +238,19 @@ Resources:
       Conditions:
         - Field: path-pattern
           Values: ["/gateway", "/gateway/*"]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref GatewayTargetGroup
+
+  GatewayHostHttpsRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Condition: HasCertificate
+    Properties:
+      ListenerArn: !Ref HttpsListener
+      Priority: 6
+      Conditions:
+        - Field: host-header
+          Values: [!Ref GatewayHostName]
       Actions:
         - Type: forward
           TargetGroupArn: !Ref GatewayTargetGroup

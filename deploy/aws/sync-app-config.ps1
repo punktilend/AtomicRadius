@@ -5,7 +5,7 @@ param(
   [string]$AppEndpoint = "https://atomicradius.app",
   [string]$ApiPublicEndpoint = "https://atomicradius.app/api",
   [string]$ApiClientEndpoint = "https://atomicradius.app/api",
-  [string]$GatewayEndpoint = "wss://atomicradius.app/gateway",
+  [string]$GatewayEndpoint = "wss://gateway.atomicradius.app",
   [string]$MediaEndpoint = "https://atomicradius.app/media",
   [string]$CdnEndpoint = "https://atomicradius.app",
   [string]$MarketingEndpoint = "https://atomicradius.app",
